@@ -35,7 +35,10 @@ This repository contains public, citable theoretical computer science knowledge 
 
 Run available checks before opening or updating a PR:
 
+- `cosheaf workspace info`
 - `cosheaf validate`
+- `cosheaf gate run`
+- `cosheaf gate run --pr-checklist .github/pull_request_template.md`
 
 If the framework is checked out locally, also run any applicable framework gate commands against this repository. If a command is unavailable or fails because of the environment, report it exactly. Skipped is not pass.
 

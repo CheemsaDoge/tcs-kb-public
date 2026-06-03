@@ -28,7 +28,10 @@ The seed artifacts in this repository are tiny `draft` examples. They are not ac
 Install or otherwise make `cosheaf` available, then run:
 
 ```bash
+cosheaf workspace info
 cosheaf validate
+cosheaf gate run
+cosheaf gate run --pr-checklist .github/pull_request_template.md
 ```
 
 Downstream workspaces should include this repository as a readonly public KB root and keep private work in a separate writable root.

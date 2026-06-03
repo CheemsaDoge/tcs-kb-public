@@ -8,6 +8,6 @@ readonly = false
 priority = 10
 
 [policy]
-private_can_depend_on_public = true
+private_can_depend_on_public = false
 public_can_depend_on_private = false
 accepted_requires_source = true

@@ -21,5 +21,14 @@ jobs:
       - name: Install TCS-Cosheaf
         run: python -m pip install "git+https://github.com/CheemsaDoge/tcs-cosheaf.git@main"
 
+      - name: Show workspace configuration
+        run: cosheaf workspace info
+
       - name: Validate public KB
         run: cosheaf validate
+
+      - name: Run gatekeeper
+        run: cosheaf gate run
+
+      - name: Run PR checklist gate
+        run: cosheaf gate run --pr-checklist .github/pull_request_template.md
