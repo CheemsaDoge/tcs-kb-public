@@ -1,0 +1,29 @@
+name: Source ingestion
+description: Propose a small source-ingestion task.
+title: "[source] "
+labels:
+  - source
+body:
+  - type: textarea
+    id: source
+    attributes:
+      label: Source
+      description: Identify the public source and the narrow scope of ingestion.
+    validations:
+      required: true
+  - type: textarea
+    id: artifacts
+    attributes:
+      label: Candidate artifacts
+      description: List the small batch of artifacts this source should support.
+    validations:
+      required: true
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Constraints
+      options:
+        - label: This is not a mass paper import.
+          required: true
+        - label: Accepted artifacts will require source metadata and human review.
+          required: true

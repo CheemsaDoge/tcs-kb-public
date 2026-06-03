@@ -1,0 +1,13 @@
+[workspace]
+name = "tcs-kb-public"
+
+[[kb]]
+name = "public"
+path = "kb/public"
+readonly = false
+priority = 10
+
+[policy]
+private_can_depend_on_public = true
+public_can_depend_on_private = false
+accepted_requires_source = true

@@ -1,0 +1,29 @@
+name: KB artifact
+description: Propose a small public KB artifact addition or change.
+title: "[kb] "
+labels:
+  - kb
+body:
+  - type: textarea
+    id: artifact
+    attributes:
+      label: Artifact
+      description: Which artifact should be added or changed?
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Public sources
+      description: List public, citable sources or explain why this is draft-only standard terminology.
+    validations:
+      required: true
+  - type: checkboxes
+    id: policy
+    attributes:
+      label: Policy checks
+      options:
+        - label: This does not include private conjectures or unpublished research ideas.
+          required: true
+        - label: This should land as a small reviewable batch.
+          required: true
