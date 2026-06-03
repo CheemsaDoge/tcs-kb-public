@@ -4,6 +4,18 @@ This repository is the public reusable theoretical computer science knowledge ba
 
 It contains public, citable definitions, constructions, reductions, counterexamples, and reviewed knowledge artifacts. It is intended to be mounted by user workspaces as a readonly KB root, with private research stored in a separate writable overlay.
 
+For ordinary downstream use, start from
+[`tcs-cosheaf-workspace-template`](https://github.com/CheemsaDoge/tcs-cosheaf-workspace-template).
+That template combines the
+[`tcs-cosheaf`](https://github.com/CheemsaDoge/tcs-cosheaf) framework, this
+public KB as readonly common knowledge, and a writable `kb/private` overlay.
+Do not manually merge the framework, public KB, and private workspace
+repositories into one mixed tree.
+
+This repository should be written only by public KB maintainers through
+reviewed PRs. Downstream private artifacts may depend on public artifacts here;
+public artifacts here must not depend on downstream private artifacts.
+
 ## Layout
 
 - `kb/public/definitions/`: public definition artifacts.
@@ -23,6 +35,9 @@ This repository does not contain private conjectures, unpublished research ideas
 
 The seed artifacts in this repository are tiny `draft` examples. They are not accepted theorem artifacts.
 
+Accepted public artifacts require complete source metadata and human review.
+Validation or gate success alone is not enough to mark an artifact accepted.
+
 ## Local Commands
 
 Install or otherwise make `cosheaf` available, then run:
@@ -34,4 +49,6 @@ cosheaf gate run
 cosheaf gate run --pr-checklist .github/pull_request_template.md
 ```
 
-Downstream workspaces should include this repository as a readonly public KB root and keep private work in a separate writable root.
+Downstream workspaces should include this repository as a readonly public KB
+root and keep private work in a separate writable root. The workspace template
+is the recommended starting point for that setup.

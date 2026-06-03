@@ -4,6 +4,11 @@ This repository contains public, citable theoretical computer science knowledge 
 
 ## Operating Model
 
+- This repository is writable only for public KB maintainers through focused
+  public-KB PRs. Downstream user workspaces should mount it readonly.
+- Ordinary users should start from
+  `tcs-cosheaf-workspace-template`, not by manually merging this repository with
+  the framework or a private workspace.
 - Use GitHub issues for nontrivial knowledge additions, policy changes, source ingestion, or schema-facing work.
 - One source-ingestion task should normally be one issue, one branch, one PR, and one small reviewable batch.
 - Use branches named `codex/<task-id-or-short-name>`.
@@ -46,6 +51,8 @@ If the framework is checked out locally, also run any applicable framework gate 
 
 - `tcs-cosheaf` is the framework repository.
 - This repository is the public reusable KB.
+- `tcs-cosheaf-workspace-template` is the recommended user entry point for
+  combining the framework, this public KB, and a private writable overlay.
 - User workspaces should mount this KB as readonly common knowledge.
 - User private KB overlays may depend on this public KB.
 - This public KB must not depend on private overlays.
