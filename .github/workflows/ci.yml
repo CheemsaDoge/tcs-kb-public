@@ -32,3 +32,6 @@ jobs:
 
       - name: Run PR checklist gate
         run: cosheaf gate run --pr-checklist .github/pull_request_template.md
+
+      - name: Check whitespace
+        run: git diff --check
