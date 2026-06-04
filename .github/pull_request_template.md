@@ -12,6 +12,7 @@
 - [ ] `cosheaf validate`
 - [ ] `cosheaf gate run`
 - [ ] `cosheaf gate run --pr-checklist .github/pull_request_template.md`
+- [ ] `git diff --check`
 
 ## Risks
 

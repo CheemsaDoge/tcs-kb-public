@@ -35,3 +35,10 @@ P1 testing hardening may start only after:
 - Public KB CI installs `tcs-cosheaf` from `@v0.1.0`, not `@main`.
 - Workspace template CI installs `tcs-cosheaf` from `@v0.1.0`, not `@main`.
 - Related P0 release-followup PRs are merged and CI passes.
+
+## P1 Public KB Validation
+
+- [x] Public KB CI still installs `tcs-cosheaf` from immutable `@v0.1.0`.
+- [x] Public KB CI runs workspace info, validation, gatekeeper, PR checklist
+  gate, and whitespace checks.
+- [x] P1 validation PRs do not add new public KB artifacts or promote drafts.
