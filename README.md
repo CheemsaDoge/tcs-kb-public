@@ -38,6 +38,10 @@ The seed artifacts in this repository are tiny `draft` examples. They are not ac
 Accepted public artifacts require complete source metadata and human review.
 Validation or gate success alone is not enough to mark an artifact accepted.
 
+## License
+
+This public KB is released under the Apache-2.0 license. See `LICENSE`.
+
 ## Local Commands
 
 Install or otherwise make `cosheaf` available, then run:
