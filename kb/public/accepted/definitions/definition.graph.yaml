@@ -1,0 +1,39 @@
+id: definition.graph
+type: definition
+title: Graph
+domain:
+- graph-theory
+status: accepted
+created_at: '2026-06-03T00:00:00Z'
+updated_at: '2026-06-04T01:38:37Z'
+authors:
+- TCS-Cosheaf contributors
+depends_on: []
+supersedes: []
+tags:
+- seed
+statement: A graph is a pair G = (V, E), where E is a set of two-element subsets of
+  V; elements of V are vertices and elements of E are edges.
+evidence:
+- kind: external
+  path: external:diestel-graph-theory-ch1
+  summary: Public textbook source for the standard graph definition.
+sources:
+- kind: book
+  title: Graph Theory
+  authors:
+  - Reinhard Diestel
+  year: 2025
+  doi: ''
+  arxiv: ''
+  url: https://www.math.uni-hamburg.de/home/diestel/books/graph.theory/preview/Ch1.pdf
+  theorem_number: ''
+  page: Chapter 1, Section 1.1, p. 2
+  notes: Sixth edition preview; defines a graph as a pair G = (V, E) with E contained
+    in the two-element subsets of V.
+review:
+  state: human_reviewed
+  notes: Maintainer human review passed for PR 7 and definition.graph on 2026-06-04; see reviews/human/review.definition.graph.md.
+risk:
+  level: low
+  notes: Source-backed definition accepted after maintainer human review.

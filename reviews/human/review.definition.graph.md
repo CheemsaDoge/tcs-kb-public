@@ -1,10 +1,12 @@
-# Human Review Request: definition.graph
+# Human Review: definition.graph
 
 Artifact: `definition.graph`
 Status at request time: `draft`
 Inline review state at request time: `requested`
 
-This request asks a human maintainer to decide whether `definition.graph` should remain draft, be revised, or proceed toward accepted promotion. Do not change `review.state` to `human_reviewed` unless this review is genuinely completed by a human maintainer.
+Outcome: passed.
+Reviewed on: 2026-06-04.
+Review source: maintainer instruction in the Codex task thread: "Maintainer human review passed for PR #7 and definition.graph. Set review.state to human_reviewed and proceed with promotion."
 
 ## Source Metadata To Check
 
@@ -17,14 +19,14 @@ This request asks a human maintainer to decide whether `definition.graph` should
 
 ## Checklist
 
-- [ ] The artifact statement matches the cited source.
-- [ ] The source metadata is complete and sufficient to relocate the source.
-- [ ] The artifact contains no private idea, conjecture, proof attempt, or unpublished research note.
-- [ ] The artifact is suitable for the public KB.
-- [ ] The artifact dependencies are public only.
-- [ ] Promotion should proceed after required validation and gate checks.
+- [x] The artifact statement matches the cited source.
+- [x] The source metadata is complete and sufficient to relocate the source.
+- [x] The artifact contains no private idea, conjecture, proof attempt, or unpublished research note.
+- [x] The artifact is suitable for the public KB.
+- [x] The artifact dependencies are public only.
+- [x] Promotion should proceed after required validation and gate checks.
 - [ ] Promotion should not proceed without revision.
 
 ## Reviewer Notes
 
-Record the human review outcome here or in a follow-up commit before promotion. If promotion should proceed, update the artifact review evidence honestly and run the promotion workflow separately.
+The maintainer approved `definition.graph` for promotion after PR #7 was merged. Proceed with `cosheaf artifact promote definition.graph` after the required pre-promotion checks pass.
