@@ -37,3 +37,27 @@ review:
 risk:
   level: low
   notes: Source-backed definition accepted after maintainer human review.
+formalizations:
+- id: cslib.graph-definition
+  system: lean4
+  library: CSLib
+  library_ref: cslib-main
+  import_path: CSLib.Graph.Basic
+  symbol: CSLib.Graph.Basic.graph
+  declaration_kind: definition
+  status: planned
+  check_mode: external_library_ref
+  expected_type: ''
+  notes: Planned CSLib formalization reference; symbol is not checked by this repository.
+alignment:
+  status: requested
+  reviewer: ''
+  reviewed_at: null
+  convention_notes:
+  - Confirm whether the CSLib graph convention matches the source-reviewed graph convention used by this artifact.
+  limitations: External Lean symbol existence and semantic alignment are not checked in this PR.
+verification_policy:
+  level: source_reviewed_with_formal_link
+  require_formal_link: true
+  require_lean_check: false
+  require_alignment_review: false
