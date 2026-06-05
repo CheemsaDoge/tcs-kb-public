@@ -1,0 +1,71 @@
+id: theorem.tree-connected
+type: theorem
+title: Every Tree Is Connected
+domain:
+- graph-theory
+status: accepted
+created_at: '2026-06-05T00:00:00Z'
+updated_at: '2026-06-05T09:48:18Z'
+authors:
+- TCS-Cosheaf contributors
+depends_on:
+- definition.tree
+- definition.connected
+supersedes: []
+tags:
+- elementary-graph-theory
+- theorem-statement
+statement: Every tree is connected.
+evidence:
+- kind: external
+  path: external:diestel-graph-theory-ch1
+  summary: Public textbook source for the standard definition of a tree as a connected
+    acyclic graph.
+sources:
+- kind: book
+  title: Graph Theory
+  authors:
+  - Reinhard Diestel
+  year: 2025
+  doi: ''
+  arxiv: ''
+  url: https://www.math.uni-hamburg.de/home/diestel/books/graph.theory/preview/Ch1.pdf
+  theorem_number: ''
+  page: Chapter 1, Section 1.5; exact page to be confirmed
+  notes: Sixth edition preview; Chapter 1, Section 1.5 is the cited locator for trees
+    as connected acyclic graphs.
+formalizations:
+- id: cslib.tree-connected
+  system: lean4
+  library: CSLib
+  library_ref: cslib-main
+  import_path: CSLib.Graph.Basic
+  symbol: CSLib.Graph.Basic.tree_connected
+  declaration_kind: theorem
+  status: planned
+  check_mode: external_library_ref
+  expected_type: ''
+  notes: Planned CSLib formalization reference; symbol is not checked by this repository.
+alignment:
+  status: requested
+  reviewer: ''
+  reviewed_at: null
+  convention_notes:
+  - Confirm whether the CSLib graph convention and theorem statement match the source-reviewed
+    artifact.
+  limitations: External Lean symbol existence, proof checking, and semantic alignment
+    are not checked in this PR.
+verification_policy:
+  level: source_reviewed_with_formal_link
+  require_formal_link: true
+  require_lean_check: false
+  require_alignment_review: false
+review:
+  state: human_reviewed
+  notes: Maintainer human review passed in the 2026-06-05 Codex task thread for issue
+    19; this is a source-reviewed theorem statement, not Lean-checked, has no machine-checked
+    proof, and its formalization metadata is planned only. See reviews/human/review.theorem.tree-connected.md.
+risk:
+  level: low
+  notes: Source-backed elementary theorem statement; no proof body or machine-checked
+    formalization is included.
