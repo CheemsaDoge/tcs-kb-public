@@ -20,6 +20,8 @@ public artifacts here must not depend on downstream private artifacts.
 
 - `kb/public/definitions/`: public definition artifacts.
 - `kb/public/theorems/`: public theorem artifacts after source and review policy is satisfied.
+- `kb/public/draft/proofs/`: draft public proof or proof-sketch artifacts before accepted promotion.
+- `kb/public/accepted/proofs/`: accepted public proof or proof-sketch artifacts after promotion.
 - `kb/public/constructions/`: public construction artifacts.
 - `kb/public/reductions/`: public reduction artifacts.
 - `kb/public/counterexamples/`: public counterexample artifacts.
@@ -37,6 +39,9 @@ The seed artifacts in this repository are tiny `draft` examples. They are not ac
 
 Accepted public artifacts require complete source metadata and human review.
 Validation or gate success alone is not enough to mark an artifact accepted.
+
+Proof sketches are explanatory source-reviewed artifacts, not machine-checked
+proofs. See `docs/PROOF_SKETCH_POLICY.md`.
 
 ## License
 

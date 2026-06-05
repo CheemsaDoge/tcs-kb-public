@@ -10,6 +10,8 @@ public KB release gates small, policy-focused, and artifact-preserving.
 - [x] License policy is Apache-2.0 and the repository includes a root `LICENSE`.
 - [x] Public KB policy forbids private conjectures, unpublished research ideas,
   and unreviewed accepted LLM-generated artifacts.
+- [x] Public KB proof sketches are policy-bound explanatory artifacts and are
+  not treated as machine-checked proofs or Lean verification evidence.
 - [x] Downstream users are directed to `tcs-cosheaf-workspace-template` instead
   of manually merging framework, public KB, and private workspace repositories.
 - [x] v0.1.1 formal-link follow-up changes do not add new KB artifacts; any
@@ -43,3 +45,12 @@ P1 testing hardening may start only after:
 - [x] Public KB CI runs workspace info, validation, gatekeeper, PR checklist
   gate, and whitespace checks.
 - [x] P1 validation PRs do not add new public KB artifacts or promote drafts.
+
+## Proof Sketch Follow-Up
+
+- [ ] Proof-sketch PRs add at most one pilot proof sketch unless the issue
+  explicitly scopes a larger reviewed batch.
+- [ ] Proof-sketch artifacts do not upgrade `formalization.status` to
+  `checked`.
+- [ ] Proof-sketch artifacts do not add Lean, lake, mathlib, or CSLib
+  dependencies.
