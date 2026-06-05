@@ -78,6 +78,6 @@ This audit covers the accepted graph-theory public KB artifacts after the elemen
 ## Follow-Up Recommendations
 
 - Tighten exact source page locators in a later bibliographic pass, without inventing page numbers.
-- Add proof-sketch artifacts only through the accepted artifact workflow after source and review policy are clear.
+- Add proof-sketch artifacts only through the accepted artifact workflow after source and review policy are clear. Use `docs/PROOF_SKETCH_POLICY.md` for the current proof-sketch boundary.
 - Before any formalization-status upgrade, run the relevant external Lean checks outside this repository and record a separate alignment review.
 - For `theorem.cycle-contains-path`, make the intended pairwise quantification and subpath convention explicit before adding proof sketches.

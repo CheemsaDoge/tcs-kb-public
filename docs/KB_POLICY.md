@@ -19,7 +19,7 @@ artifacts.
 
 - Public definitions with clear terminology.
 - Public constructions with cited sources or standard references.
-- Public reductions, counterexamples, and theorem statements after review.
+- Public reductions, counterexamples, theorem statements, and proof sketches after review.
 - Draft artifacts clearly marked with `status: draft`.
 - Review records and gate outputs.
 
@@ -29,8 +29,19 @@ artifacts.
 - Unpublished research ideas.
 - Private proof attempts.
 - Accepted theorem artifacts without source metadata.
+- Accepted proof-sketch artifacts without source metadata and human review.
 - LLM-generated accepted artifacts without human review.
 - Mass imports of papers or large batches that cannot be reviewed.
+
+## Proof Sketches
+
+Proof sketches are explanatory, source-reviewed artifacts. They are not
+machine-checked proofs and must not be used as Lean verification evidence.
+They must depend on accepted theorem or definition artifacts, include source
+metadata, include human review, and keep any formalization metadata planned-only
+unless a later formal-check workflow actually verifies it.
+
+See `docs/PROOF_SKETCH_POLICY.md`.
 
 ## Promotion
 
