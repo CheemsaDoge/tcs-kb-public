@@ -85,10 +85,11 @@ review:
   state: human_reviewed
   notes: Maintainer human review passed in the 2026-06-05 Codex task thread for issue
     23; this is a source-reviewed proof sketch and a definitional expansion under
-    the current tree convention. It is not Lean-checked and not machine-checked. See
-    reviews/human/review.proof-sketch.tree-connected.md.
+    the current tree convention. It is not Lean-checked, not machine-checked, and
+    not Lean verification evidence. See reviews/human/review.proof-sketch.tree-connected.md.
 risk:
   level: low
   notes: Low risk because the sketch expands the accepted tree definition, but it
     depends on the current tree convention that a tree is a connected acyclic graph.
-    No machine-checked proof is claimed.
+    No machine-checked proof is claimed, and the proof sketch is not Lean verification
+    evidence.
