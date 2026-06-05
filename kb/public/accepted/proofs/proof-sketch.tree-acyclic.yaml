@@ -1,0 +1,95 @@
+id: proof-sketch.tree-acyclic
+type: proof
+title: Tree Acyclic Proof Sketch
+domain:
+- graph-theory
+status: accepted
+created_at: '2026-06-05T00:00:00Z'
+updated_at: '2026-06-05T11:49:23Z'
+authors:
+- TCS-Cosheaf contributors
+depends_on:
+- theorem.tree-acyclic
+- definition.tree
+- definition.acyclic
+supersedes: []
+tags:
+- proof-sketch
+- graph-theory
+statement: 'Proof sketch for theorem.tree-acyclic.
+
+
+  Under the current tree convention, definition.tree states that a tree is a connected
+  acyclic graph. Therefore the acyclic component of that definition gives definition.acyclic
+  for any tree, which is exactly the statement recorded by theorem.tree-acyclic. This
+  is a definitional expansion proof sketch, not Lean-checked, not machine-checked,
+  and not Lean verification evidence.'
+evidence:
+- kind: artifact
+  path: kb/public/accepted/theorems/theorem.tree-acyclic.yaml
+  summary: Accepted source-reviewed theorem statement targeted by this proof sketch.
+- kind: artifact
+  path: kb/public/accepted/definitions/definition.tree.yaml
+  summary: Accepted source-reviewed definition that defines a tree as a connected
+    acyclic graph.
+- kind: artifact
+  path: kb/public/accepted/definitions/definition.acyclic.yaml
+  summary: Accepted source-reviewed definition of acyclicity used by the theorem statement.
+- kind: external
+  path: external:diestel-graph-theory-ch1
+  summary: Public graph-theory source for the tree and acyclicity conventions referenced
+    by the accepted artifacts.
+sources:
+- kind: book
+  title: Graph Theory
+  authors:
+  - Reinhard Diestel
+  year: 2025
+  doi: ''
+  arxiv: ''
+  url: https://www.math.uni-hamburg.de/home/diestel/books/graph.theory/preview/Ch1.pdf
+  theorem_number: ''
+  page: Chapter 1, Section 1.5; exact page to be confirmed.
+  notes: Sixth edition preview; Chapter 1, Section 1.5 is the cited locator for trees
+    as connected acyclic graphs. This proof sketch is a definitional expansion under
+    the current tree convention and cites no independent proof theorem number.
+formalizations:
+- id: cslib.tree-acyclic-proof-sketch
+  system: lean4
+  library: CSLib
+  library_ref: cslib-main
+  import_path: CSLib.Graph.Basic
+  symbol: CSLib.Graph.Basic.tree_acyclic
+  declaration_kind: theorem
+  status: planned
+  check_mode: external_library_ref
+  expected_type: ''
+  notes: Planned CSLib proof-alignment reference for the target theorem; this proof
+    sketch is not used as Lean verification evidence, and the symbol is not checked
+    by this repository.
+alignment:
+  status: requested
+  reviewer: ''
+  reviewed_at: null
+  convention_notes:
+  - Confirm whether the CSLib graph convention, tree convention, and target theorem
+    statement match this source-reviewed proof sketch.
+  limitations: External Lean symbol existence, proof checking, and semantic alignment
+    are not checked in this PR. This proof sketch is not Lean verification evidence.
+verification_policy:
+  level: source_reviewed_with_formal_link
+  require_formal_link: true
+  require_lean_check: false
+  require_alignment_review: false
+review:
+  state: human_reviewed
+  notes: Maintainer human review passed in the 2026-06-05 Codex task thread for issue
+    25; this is a source-reviewed proof sketch and a definitional expansion under
+    the current tree convention. It is not Lean-checked, not machine-checked, and
+    not Lean verification evidence. See reviews/human/review.proof-sketch.tree-acyclic.md.
+risk:
+  level: low
+  notes: Low risk because the sketch expands the accepted tree definition, but it
+    depends on the current tree convention that a tree is a connected acyclic graph.
+    No machine-checked proof is claimed, and the proof sketch is not Lean verification
+    evidence.
