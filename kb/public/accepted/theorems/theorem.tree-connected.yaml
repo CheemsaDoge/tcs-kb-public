@@ -5,7 +5,7 @@ domain:
 - graph-theory
 status: accepted
 created_at: '2026-06-05T00:00:00Z'
-updated_at: '2026-06-05T09:48:18Z'
+updated_at: '2026-06-05T10:58:00Z'
 authors:
 - TCS-Cosheaf contributors
 depends_on:
@@ -31,9 +31,11 @@ sources:
   arxiv: ''
   url: https://www.math.uni-hamburg.de/home/diestel/books/graph.theory/preview/Ch1.pdf
   theorem_number: ''
-  page: Chapter 1, Section 1.5; exact page to be confirmed
+  page: Chapter 1, Section 1.5; exact page to be confirmed.
   notes: Sixth edition preview; Chapter 1, Section 1.5 is the cited locator for trees
-    as connected acyclic graphs.
+    as connected acyclic graphs. This statement is a definitional consequence of
+    definition.tree under this source-reviewed tree convention; no independent theorem
+    number or proof body is cited.
 formalizations:
 - id: cslib.tree-connected
   system: lean4
@@ -64,8 +66,10 @@ review:
   state: human_reviewed
   notes: Maintainer human review passed in the 2026-06-05 Codex task thread for issue
     19; this is a source-reviewed theorem statement, not Lean-checked, has no machine-checked
-    proof, and its formalization metadata is planned only. See reviews/human/review.theorem.tree-connected.md.
+    proof, and its formalization metadata is planned only. Classification audit -
+    definitional consequence; elementary source-reviewed statement; not an independent
+    machine-checked theorem; no proof body is stored. See reviews/human/review.theorem.tree-connected.md.
 risk:
   level: low
-  notes: Source-backed elementary theorem statement; no proof body or machine-checked
-    formalization is included.
+  notes: This statement is a definitional consequence under the current tree convention;
+    it is source-reviewed but not machine-checked. No proof body is stored.
