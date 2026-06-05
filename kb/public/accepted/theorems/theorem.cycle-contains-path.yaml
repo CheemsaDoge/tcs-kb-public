@@ -36,7 +36,9 @@ sources:
   notes: Sixth edition preview; Chapter 1, Section 1.3 is the cited locator for paths
     and cycles. This statement is an elementary source-reviewed consequence of the
     current path and cycle conventions, using vertices on the cycle and paths contained
-    in the cycle; no independent theorem number or proof body is cited.
+    in the cycle; no independent theorem number or proof body is cited. Clarification
+    audit for issue 29 - this statement is convention-sensitive, not Lean-checked,
+    not machine-checked, and not ready for proof-sketch work until wording is stable.
 formalizations:
 - id: cslib.cycle-contains-path
   system: lean4
@@ -71,11 +73,11 @@ review:
     elementary source-reviewed statement; not an independent machine-checked theorem;
     no proof body is stored. Clarification audit for issue 29 - this statement is
     convention-sensitive, is not Lean-checked, is not machine-checked, and is not
-    ready for proof-sketch work until this wording is stable. See reviews/human/review.theorem.cycle-contains-path.md.
+    ready for proof-sketch work until wording is stable. See reviews/human/review.theorem.cycle-contains-path.md.
 risk:
   level: low
   notes: This statement is an elementary source-reviewed consequence of the current
     path and cycle conventions; it is convention-sensitive, not Lean-checked, and
     not machine-checked. No proof body is stored. Future proof-sketch work should
-    wait until the wording about vertices on the cycle and paths contained in the
-    cycle is stable.
+    wait because this statement is not ready for proof-sketch work until wording
+    is stable.
