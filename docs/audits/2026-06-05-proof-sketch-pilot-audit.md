@@ -110,3 +110,4 @@ G10 has no blocking issue for these two pilots under the current proof-sketch po
 - Keep `formalizations.status: planned` and `verification_policy.require_lean_check: false` unless a separate workflow performs and reviews actual external formal checks.
 - Do not treat planned CSLib or mathlib locator metadata as proof evidence.
 - Add alignment review before relying on any external formal-library symbol for semantic confidence.
+- Track issue #29 before any `theorem.cycle-contains-path` proof sketch: the theorem statement should explicitly say that the vertices are on the cycle and that the connecting path is contained in the cycle.
