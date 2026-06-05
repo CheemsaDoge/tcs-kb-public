@@ -1,0 +1,72 @@
+id: definition.path
+type: definition
+title: Path
+domain:
+- graph-theory
+status: accepted
+created_at: '2026-06-05T00:00:00Z'
+updated_at: '2026-06-05T06:41:08Z'
+authors:
+- TCS-Cosheaf contributors
+depends_on:
+- definition.graph
+- definition.vertex
+- definition.edge
+supersedes: []
+tags:
+- graph-foundation
+statement: A path in a graph is a non-empty graph whose vertices can be ordered linearly
+  so that consecutive vertices are adjacent and these are exactly the edges of the
+  path.
+evidence:
+- kind: external
+  path: external:diestel-graph-theory-ch1
+  summary: Public textbook source for the standard graph path definition.
+sources:
+- kind: book
+  title: Graph Theory
+  authors:
+  - Reinhard Diestel
+  year: 2025
+  doi: ''
+  arxiv: ''
+  url: https://www.math.uni-hamburg.de/home/diestel/books/graph.theory/preview/Ch1.pdf
+  theorem_number: ''
+  page: Chapter 1, Section 1.3; exact preview page not recorded in this repository
+  notes: Sixth edition preview; Chapter 1, Section 1.3 is the cited locator for paths.
+    Exact PDF preview page should be confirmed during human review.
+formalizations:
+- id: cslib.path-definition
+  system: lean4
+  library: CSLib
+  library_ref: cslib-main
+  import_path: CSLib.Graph.Basic
+  symbol: CSLib.Graph.Basic.path
+  declaration_kind: definition
+  status: planned
+  check_mode: external_library_ref
+  expected_type: ''
+  notes: Planned CSLib formalization reference; symbol is not checked by this repository.
+alignment:
+  status: requested
+  reviewer: ''
+  reviewed_at: null
+  convention_notes:
+  - Confirm whether the CSLib graph convention matches the source-reviewed graph convention
+    used by this artifact.
+  limitations: External Lean symbol existence and semantic alignment are not checked
+    in this PR.
+verification_policy:
+  level: source_reviewed_with_formal_link
+  require_formal_link: true
+  require_lean_check: false
+  require_alignment_review: false
+review:
+  state: human_reviewed
+  notes: Maintainer human review passed in the 2026-06-05 Codex task thread for issue
+    15; this is a source-reviewed definition, not a Lean-checked formal theorem. See
+    reviews/human/review.definition.path.md.
+risk:
+  level: low
+  notes: Source-backed basic graph-theory definition candidate; exact preview page
+    locator remains to be confirmed by human review.
