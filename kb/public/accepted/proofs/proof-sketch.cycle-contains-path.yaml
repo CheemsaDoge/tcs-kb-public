@@ -1,0 +1,104 @@
+id: proof-sketch.cycle-contains-path
+type: proof
+title: Cycle Contains Path Proof Sketch
+domain:
+- graph-theory
+status: accepted
+created_at: '2026-06-05T15:48:00Z'
+updated_at: '2026-06-05T15:52:41Z'
+authors:
+- TCS-Cosheaf contributors
+depends_on:
+- theorem.cycle-contains-path
+- definition.cycle
+- definition.path
+- definition.vertex
+supersedes: []
+tags:
+- proof-sketch
+- graph-theory
+statement: 'Proof sketch for theorem.cycle-contains-path.
+
+
+  This proof sketch explains why, in a cycle, any two vertices on the cycle are joined
+  by a path contained in the cycle. reasoning classification: elementary argument.
+
+
+  Informal idea only: a cycle gives two arcs between vertices on the cyclic order;
+  either arc is a path contained in the cycle. This proof sketch is not Lean-checked,
+  not machine-checked, not Lean verification evidence, and no machine-checked proof
+  is claimed.'
+evidence:
+- kind: artifact
+  path: kb/public/accepted/theorems/theorem.cycle-contains-path.yaml
+  summary: Accepted source-reviewed theorem statement targeted by this proof sketch.
+- kind: artifact
+  path: kb/public/accepted/definitions/definition.cycle.yaml
+  summary: Accepted source-reviewed definition of cycle used by the theorem statement.
+- kind: artifact
+  path: kb/public/accepted/definitions/definition.path.yaml
+  summary: Accepted source-reviewed definition of path used by the theorem statement.
+- kind: artifact
+  path: kb/public/accepted/definitions/definition.vertex.yaml
+  summary: Accepted source-reviewed definition of vertex used by the theorem statement.
+- kind: external
+  path: external:diestel-graph-theory-ch1
+  summary: Public graph-theory source for the path, cycle, and vertex conventions
+    referenced by the accepted artifacts.
+sources:
+- kind: book
+  title: Graph Theory
+  authors:
+  - Reinhard Diestel
+  year: 2025
+  doi: ''
+  arxiv: ''
+  url: https://www.math.uni-hamburg.de/home/diestel/books/graph.theory/preview/Ch1.pdf
+  theorem_number: ''
+  page: Chapter 1, Section 1.3; exact page to be confirmed.
+  notes: 'Sixth edition preview; Chapter 1, Section 1.3 is the cited locator for paths
+    and cycles. This proof sketch is an elementary argument under the clarified cycle-contains-path
+    wording: vertices are on the cycle and the path is contained in the cycle. It
+    is not Lean-checked, not machine-checked, not Lean verification evidence, and
+    no machine-checked proof is claimed.'
+formalizations:
+- id: cslib.cycle-contains-path-proof-sketch
+  system: lean4
+  library: CSLib
+  library_ref: cslib-main
+  import_path: CSLib.Graph.Basic
+  symbol: CSLib.Graph.Basic.cycle_contains_path
+  declaration_kind: theorem
+  status: planned
+  check_mode: external_library_ref
+  expected_type: ''
+  notes: Planned proof-alignment reference for the target theorem only; this repository
+    does not check or claim that the CSLib symbol exists. This proof sketch is not
+    Lean verification evidence.
+alignment:
+  status: requested
+  reviewer: ''
+  reviewed_at: null
+  convention_notes:
+  - Confirm whether the CSLib graph convention, cycle convention, and target theorem
+    statement match this source-reviewed proof sketch.
+  limitations: External Lean symbol existence, proof checking, and semantic alignment
+    are not checked in this PR. This proof sketch is not Lean verification evidence.
+verification_policy:
+  level: source_reviewed_with_formal_link
+  require_formal_link: true
+  require_lean_check: false
+  require_alignment_review: false
+review:
+  state: human_reviewed
+  notes: Maintainer human review passed in the 2026-06-05 Codex task thread for issue
+    31; this is a source-reviewed proof sketch with reasoning classification elementary
+    argument. It is not Lean-checked, not machine-checked, not Lean verification evidence,
+    and no machine-checked proof is claimed. See reviews/human/review.proof-sketch.cycle-contains-path.md.
+risk:
+  level: low
+  notes: Low risk because the sketch records only the informal elementary argument
+    that a cycle gives two arcs between vertices on the cyclic order, either of which
+    is a path contained in the cycle. It depends on the clarified convention in theorem.cycle-contains-path.
+    No machine-checked proof is claimed, and the proof sketch is not Lean verification
+    evidence.
