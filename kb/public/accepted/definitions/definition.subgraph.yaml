@@ -5,7 +5,7 @@ domain:
 - graph-theory
 status: accepted
 created_at: '2026-06-05T00:00:00Z'
-updated_at: '2026-06-05T07:34:40Z'
+updated_at: '2026-06-05T10:58:00Z'
 authors:
 - TCS-Cosheaf contributors
 depends_on:
@@ -31,9 +31,9 @@ sources:
   arxiv: ''
   url: https://www.math.uni-hamburg.de/home/diestel/books/graph.theory/preview/Ch1.pdf
   theorem_number: ''
-  page: Chapter 1, Section 1.1; exact page to be confirmed
+  page: Chapter 1, Section 1.1; exact page to be confirmed.
   notes: Sixth edition preview; Chapter 1, Section 1.1 is the cited locator for subgraphs.
-    Exact PDF preview page should be confirmed during human review.
+    Exact page remains to be confirmed during later bibliographic tightening.
 formalizations:
 - id: cslib.subgraph-definition
   system: lean4
