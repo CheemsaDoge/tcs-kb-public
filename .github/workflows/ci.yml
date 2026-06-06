@@ -27,6 +27,12 @@ jobs:
       - name: Validate public KB
         run: cosheaf validate
 
+      - name: Run public KB policy guard self-test
+        run: python scripts/check_public_kb_policy.py --self-test
+
+      - name: Run public KB policy guard
+        run: python scripts/check_public_kb_policy.py
+
       - name: Run gatekeeper
         run: cosheaf gate run
 
