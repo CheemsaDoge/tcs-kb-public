@@ -17,7 +17,7 @@ This review covers a source-reviewed public definition. It is not a Lean check, 
 - Title: `Graph Theory`
 - Authors: Reinhard Diestel
 - Year: 2025
-- Locator: Chapter 1, Section 1.3; exact preview page not recorded in this repository
+- Locator: Chapter 1, Section 1.3, printed p. 6
 - URL: https://www.math.uni-hamburg.de/home/diestel/books/graph.theory/preview/Ch1.pdf
 
 ## Checklist
@@ -35,3 +35,14 @@ This review covers a source-reviewed public definition. It is not a Lean check, 
 ## Reviewer Notes
 
 Proceed with `cosheaf artifact promote definition.path` after required validation and gate checks pass. Keep the locator at Chapter 1, Section 1.3 unless a maintainer later verifies an exact PDF preview page.
+
+## Bibliographic Follow-Up Note
+
+Recorded on: 2026-06-06.
+Issue: #38, source-locator tightening for path and cycle.
+
+The public Chapter 1 preview was rechecked with local PDF text extraction. The
+path definition appears in Chapter 1, Section 1.3, printed p. 6. The artifact
+source locator was tightened to that printed page. This note records the
+bibliographic status for PR review; it does not claim Lean, CSLib, mathlib, SAT,
+SMT, or other machine checking.
