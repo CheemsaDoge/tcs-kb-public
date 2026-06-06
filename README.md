@@ -31,6 +31,9 @@ public artifacts here must not depend on downstream private artifacts.
 - `reviews/gatekeeper/`: validation and gatekeeper review outputs.
 - `docs/`: repository policies.
 
+See `docs/GRAPH_FOUNDATION_BACKLOG.md` for the controlled graph/SAT foundation
+backlog and `docs/SOURCE_NOTES.md` for the durable source-note convention.
+
 ## Policy
 
 This repository does not contain private conjectures, unpublished research ideas, or accepted LLM-generated artifacts without human review. New knowledge should normally begin as a GitHub issue and land as a small PR.
