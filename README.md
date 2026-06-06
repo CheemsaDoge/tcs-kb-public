@@ -18,13 +18,13 @@ public artifacts here must not depend on downstream private artifacts.
 
 ## Layout
 
-- `kb/public/definitions/`: public definition artifacts.
-- `kb/public/theorems/`: public theorem artifacts after source and review policy is satisfied.
+- `kb/public/accepted/definitions/`: accepted public definition artifacts.
+- `kb/public/accepted/theorems/`: accepted public theorem artifacts.
+- `kb/public/accepted/proofs/`: accepted public proof or proof-sketch artifacts.
 - `kb/public/draft/proofs/`: draft public proof or proof-sketch artifacts before accepted promotion.
-- `kb/public/accepted/proofs/`: accepted public proof or proof-sketch artifacts after promotion.
-- `kb/public/constructions/`: public construction artifacts.
-- `kb/public/reductions/`: public reduction artifacts.
-- `kb/public/counterexamples/`: public counterexample artifacts.
+- `kb/public/constructions/`: public construction artifacts; current artifacts here may still be drafts.
+- `kb/public/reductions/`: public reduction notes or artifacts.
+- `kb/public/counterexamples/`: public counterexample notes or artifacts.
 - `sources/`: source notes and bibliographic metadata.
 - `reviews/human/`: human review records.
 - `reviews/ai/`: AI-assisted review notes.
@@ -35,7 +35,7 @@ public artifacts here must not depend on downstream private artifacts.
 
 This repository does not contain private conjectures, unpublished research ideas, or accepted LLM-generated artifacts without human review. New knowledge should normally begin as a GitHub issue and land as a small PR.
 
-The seed artifacts in this repository are tiny `draft` examples. They are not accepted theorem artifacts.
+The current public KB includes accepted definitions, theorem statements, and proof sketches under `kb/public/accepted/`. Draft artifacts remain outside `accepted/` until they pass the repository promotion workflow.
 
 Accepted public artifacts require complete source metadata and human review.
 Validation or gate success alone is not enough to mark an artifact accepted.
