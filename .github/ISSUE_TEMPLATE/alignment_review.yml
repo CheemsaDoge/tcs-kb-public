@@ -1,0 +1,93 @@
+name: Alignment review request
+description: Request human review of informal/formal or source/artifact alignment.
+title: "[alignment-review] "
+labels:
+  - review
+  - alignment
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template when a maintainer needs to review whether an artifact
+        statement, convention, source locator, or formal-link target is aligned.
+        Alignment review is human review metadata, not an automatic checker.
+  - type: input
+    id: artifact_id
+    attributes:
+      label: Artifact ID
+      placeholder: "definition.graph"
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Define the exact alignment question.
+      placeholder: "Check whether the CSLib graph symbol convention matches this artifact's simple graph convention."
+    validations:
+      required: true
+  - type: textarea
+    id: statement
+    attributes:
+      label: Statement or convention under review
+      description: Quote or summarize the artifact statement and convention being reviewed.
+    validations:
+      required: true
+  - type: textarea
+    id: source_metadata
+    attributes:
+      label: Source metadata
+      description: List source metadata and exact locator status used for this review.
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependency list
+      description: List artifact and formal-library dependencies relevant to the alignment question.
+      placeholder: "`definition.graph`; library_ref: cslib-main; import_path: ..."
+    validations:
+      required: true
+  - type: textarea
+    id: review_status
+    attributes:
+      label: Review status
+      description: State requested reviewer, existing review records, and target review record path.
+      placeholder: "requested; planned record: reviews/human/review.definition.graph-alignment.md"
+    validations:
+      required: true
+  - type: dropdown
+    id: formalization_status
+    attributes:
+      label: Formalization status
+      description: Select current status for the linked formalization metadata.
+      options:
+        - planned
+        - linked
+        - checked
+        - broken
+        - deprecated
+        - not applicable
+    validations:
+      required: true
+  - type: textarea
+    id: limitations
+    attributes:
+      label: Known limitations
+      description: Record what this review will not prove.
+      placeholder: "A reviewed alignment note is not a Lean proof; #check only resolves symbols if available."
+    validations:
+      required: true
+  - type: checkboxes
+    id: policy
+    attributes:
+      label: Policy checks
+      options:
+        - label: This request contains no private material.
+          required: true
+        - label: Alignment will not be marked human_reviewed until a real human review record exists.
+          required: true
+        - label: Checker results, if any, will not be treated as semantic alignment by themselves.
+          required: true
+        - label: Validation or gate success will not be treated as human review.
+          required: true

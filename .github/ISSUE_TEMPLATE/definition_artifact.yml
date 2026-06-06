@@ -1,0 +1,98 @@
+name: Definition artifact proposal
+description: Propose one small public definition artifact.
+title: "[definition] "
+labels:
+  - kb
+  - definition
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for one public definition artifact. Keep the scope
+        small. Do not add accepted knowledge until source metadata, gates, and
+        human review are complete.
+  - type: input
+    id: artifact_id
+    attributes:
+      label: Artifact ID
+      description: Proposed stable artifact identifier.
+      placeholder: "definition.example"
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Define the smallest definition change this issue covers.
+      placeholder: "Add a definition of ... only; no theorem or proof-sketch content."
+    validations:
+      required: true
+  - type: textarea
+    id: statement
+    attributes:
+      label: Statement
+      description: Draft the intended definition statement or convention.
+      placeholder: "A ... is ..."
+    validations:
+      required: true
+  - type: textarea
+    id: source_metadata
+    attributes:
+      label: Source metadata
+      description: Provide public, citable source metadata and locator status.
+      placeholder: "Title, authors, year, edition/version, URL/DOI/arXiv, chapter/section/page/theorem if confirmed."
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependency list
+      description: List accepted artifact dependencies or explicit external dependencies.
+      placeholder: "`definition.graph`; `definition.vertex`; external:..."
+    validations:
+      required: true
+  - type: textarea
+    id: review_status
+    attributes:
+      label: Review status
+      description: State current human review status and planned review record path.
+      placeholder: "requested; planned record: reviews/human/review.definition.example.md"
+    validations:
+      required: true
+  - type: dropdown
+    id: formalization_status
+    attributes:
+      label: Formalization status
+      description: Select checked only if a real checker already ran and recorded evidence.
+      options:
+        - planned
+        - linked
+        - checked
+        - not applicable
+        - broken
+        - deprecated
+    validations:
+      required: true
+  - type: textarea
+    id: limitations
+    attributes:
+      label: Known limitations
+      description: Record convention, source locator, formal-link, or alignment limits.
+      placeholder: "Exact locator unknown; alignment review requested; no Lean check."
+    validations:
+      required: true
+  - type: checkboxes
+    id: policy
+    attributes:
+      label: Policy checks
+      options:
+        - label: This proposal contains no private conjectures, private notes, or unpublished research ideas.
+          required: true
+        - label: This proposal contains no private workspace material.
+          required: true
+        - label: Accepted status will require source metadata, validation/gates, and human review.
+          required: true
+        - label: Validation or gate success will not be treated as human review.
+          required: true
+        - label: Planned or linked formalizations will not be presented as checker results.
+          required: true
