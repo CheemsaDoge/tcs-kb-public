@@ -19,9 +19,14 @@
 Public KB policy checklist:
 
 - [ ] No private conjectures or unpublished research ideas.
+- [ ] No private workspace material is included.
 - [ ] Public artifacts do not depend on private artifacts.
 - [ ] Draft artifacts are clearly marked `draft`.
 - [ ] Accepted artifacts include source metadata and human review.
+- [ ] Source metadata includes real locators or explicitly records uncertainty.
+- [ ] Validation/gate success is not presented as human review.
+- [ ] Formalization status is stated as planned/linked/checked/not applicable.
+- [ ] Planned or linked formalizations are not presented as Lean/mathlib/CSLib/SAT/SMT verification.
 
 ## Interface Changes
 

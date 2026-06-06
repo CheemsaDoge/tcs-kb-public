@@ -1,0 +1,103 @@
+name: Source note proposal
+description: Propose one durable source note.
+title: "[source-note] "
+labels:
+  - source
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use one source note per durable book, paper, or web source. Source
+        notes do not replace artifact-local source metadata under current
+        policy.
+  - type: input
+    id: source_note_id
+    attributes:
+      label: Source note ID
+      placeholder: "diestel-graph-theory"
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Source kind
+      options:
+        - book
+        - paper
+        - web
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: source_metadata
+    attributes:
+      label: Source metadata
+      description: Provide enough metadata for reviewers to relocate the source.
+      placeholder: "Title, authors, year, edition/version, URL, DOI, arXiv, access notes."
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Explain the narrow source-note addition or correction.
+      placeholder: "Add one book source note; no artifact changes."
+    validations:
+      required: true
+  - type: textarea
+    id: statement
+    attributes:
+      label: Artifact usage notes
+      description: List how existing or future artifacts may use this source.
+      placeholder: "Supports graph definition artifacts; exact locators still artifact-local."
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependency list
+      description: List related artifact IDs or say N/A.
+      placeholder: "`definition.graph`, `definition.path`, or N/A"
+    validations:
+      required: true
+  - type: textarea
+    id: review_status
+    attributes:
+      label: Review status
+      description: State whether bibliographic review exists or is requested.
+      placeholder: "requested; reviewer must confirm source identity and locator status."
+    validations:
+      required: true
+  - type: dropdown
+    id: formalization_status
+    attributes:
+      label: Formalization status
+      description: Source notes normally do not carry formalization status.
+      options:
+        - not applicable
+        - planned
+        - linked
+        - checked
+    validations:
+      required: true
+  - type: textarea
+    id: limitations
+    attributes:
+      label: Known limitations
+      description: Record uncertain locators, access limits, edition differences, or migration limits.
+      placeholder: "Exact preview page unknown; source note does not replace artifact-local source metadata."
+    validations:
+      required: true
+  - type: checkboxes
+    id: policy
+    attributes:
+      label: Policy checks
+      options:
+        - label: No page, theorem, lemma, or section locator is fabricated.
+          required: true
+        - label: This proposal contains no private material.
+          required: true
+        - label: This source note will not be treated as a substitute for accepted artifact source metadata unless framework policy changes later.
+          required: true
+        - label: Validation or gate success will not be treated as human review.
+          required: true

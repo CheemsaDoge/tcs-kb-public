@@ -1,21 +1,85 @@
-name: KB artifact
-description: Propose a small public KB artifact addition or change.
+name: KB artifact routing
+description: Route a public KB artifact proposal to the right specific template.
 title: "[kb] "
 labels:
   - kb
 body:
-  - type: textarea
-    id: artifact
+  - type: markdown
     attributes:
-      label: Artifact
-      description: Which artifact should be added or changed?
+      value: |
+        Use this only when no specific public KB template fits.
+
+        Prefer the dedicated templates for:
+
+        - new public definition artifact proposals;
+        - new theorem or claim artifact proposals;
+        - source note proposals;
+        - formal link proposals;
+        - alignment review requests.
+
+        This repository accepts public, citable knowledge only. Do not include
+        private conjectures, private notes, unpublished research ideas, or
+        LLM-generated accepted content without human review.
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Explain why none of the dedicated templates fits and define the smallest reviewable scope.
+      placeholder: "Example: policy-only update for an existing accepted artifact family; no artifact status changes."
+    validations:
+      required: true
+  - type: textarea
+    id: affected_records
+    attributes:
+      label: Affected records
+      description: List affected artifact IDs, source notes, review records, or docs paths.
+      placeholder: "`definition.example`, `sources/books/example.md`, docs/... or N/A"
     validations:
       required: true
   - type: textarea
     id: sources
     attributes:
-      label: Public sources
-      description: List public, citable sources or explain why this is draft-only standard terminology.
+      label: Source metadata
+      description: List public, citable source metadata or state why this is policy-only.
+      placeholder: "Title, authors, year, edition/version, URL/DOI/arXiv, locator status."
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependency list
+      description: List expected artifact dependencies or say N/A for policy-only work.
+      placeholder: "`definition.graph`, `definition.vertex`, or N/A"
+    validations:
+      required: true
+  - type: textarea
+    id: review_status
+    attributes:
+      label: Review status
+      description: State whether human review exists, is requested, or is not applicable yet.
+      placeholder: "human_reviewed / requested / not applicable; include review record path if known."
+    validations:
+      required: true
+  - type: dropdown
+    id: formalization_status
+    attributes:
+      label: Formalization status
+      description: Planned and linked formalizations are metadata, not proof.
+      options:
+        - not applicable
+        - planned
+        - linked
+        - checked
+        - broken
+        - deprecated
+    validations:
+      required: true
+  - type: textarea
+    id: limitations
+    attributes:
+      label: Known limitations
+      description: Record source, convention, review, formal-link, or validation limitations.
+      placeholder: "No Lean/mathlib/CSLib check; exact page locator unknown; alignment review requested."
     validations:
       required: true
   - type: checkboxes
@@ -24,6 +88,12 @@ body:
       label: Policy checks
       options:
         - label: This does not include private conjectures or unpublished research ideas.
+          required: true
+        - label: This does not include private workspace material.
+          required: true
+        - label: Validation or gate success will not be treated as human review.
+          required: true
+        - label: Formal-link metadata will not be presented as Lean, mathlib, CSLib, SAT, SMT, or semantic-alignment proof.
           required: true
         - label: This should land as a small reviewable batch.
           required: true
