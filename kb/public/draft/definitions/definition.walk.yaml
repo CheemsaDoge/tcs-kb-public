@@ -1,0 +1,79 @@
+id: definition.walk
+type: definition
+title: Walk
+domain:
+- graph-theory
+status: draft
+created_at: '2026-06-07T00:00:00Z'
+updated_at: '2026-06-07T00:00:00Z'
+authors:
+- TCS-Cosheaf contributors
+depends_on:
+- definition.graph
+- definition.vertex
+- definition.edge
+supersedes: []
+tags:
+- graph-foundation
+- draft
+statement: A walk of length k in a graph is a non-empty alternating sequence of
+  vertices and edges v_0 e_0 v_1 e_1 ... e_{k-1} v_k such that each edge e_i
+  has endpoints v_i and v_{i+1}.
+evidence:
+- kind: external
+  path: external:diestel-graph-theory-ch1
+  summary: Public textbook source for standard graph walk terminology.
+sources:
+- kind: book
+  title: Graph Theory
+  authors:
+  - Reinhard Diestel
+  year: 2025
+  doi: 10.1007/978-3-662-70107-2
+  arxiv: ''
+  url: https://www.math.uni-hamburg.de/home/diestel/books/graph.theory/preview/Ch1.pdf
+  theorem_number: ''
+  page: Chapter 1, Section 1.3; exact printed page to be confirmed by maintainer
+    review.
+  notes: Sixth edition preview; Chapter 1, Section 1.3 is the cited locator for
+    walk terminology. Local text extraction found the walk definition near the
+    end of Section 1.3, but this draft does not claim completed human review or
+    accepted bibliographic tightening.
+formalizations:
+- id: cslib.walk-definition
+  system: lean4
+  library: CSLib
+  library_ref: cslib-main
+  import_path: CSLib.Graph.Basic
+  symbol: CSLib.Graph.Basic.walk
+  declaration_kind: definition
+  status: planned
+  check_mode: external_library_ref
+  expected_type: ''
+  notes: Planned CSLib formalization reference; symbol/import availability is not
+    checked by this repository, and this metadata is not Lean verification.
+alignment:
+  status: requested
+  reviewer: ''
+  reviewed_at: null
+  convention_notes:
+  - Confirm walk conventions for repeated vertices or edges, length-zero cases,
+    and whether the formal-library encoding represents walks as edge sequences,
+    vertex sequences, or paths in a relation.
+  limitations: External Lean symbol existence and semantic alignment are not checked
+    in this PR.
+verification_policy:
+  level: source_reviewed_with_formal_link
+  require_formal_link: true
+  require_lean_check: false
+  require_alignment_review: false
+review:
+  state: requested
+  notes: Draft-only foundation candidate for future human review. Validation and
+    gates are not a substitute for maintainer review, and this artifact is not
+    accepted knowledge.
+risk:
+  level: medium
+  notes: Low-level graph definition, but convention-sensitive because walk definitions
+    can differ on length-zero walks, repeated vertices or edges, and encoding as
+    vertex-edge alternations versus formal relation paths.
