@@ -1,0 +1,15 @@
+schema_version: 1
+libraries:
+  - id: cslib-main
+    name: CSLib
+    system: lean4
+    git: https://example.invalid/cslib.git
+    commit: "0123456789abcdef0123456789abcdef01234567"
+    lean_version: lean4-example
+    lake_manifest: lake-manifest.json
+    notes: >
+      Public KB placeholder manifest for planned CSLib references. Replace this
+      entry with a real repository URL, commit, Lean version, and lake manifest
+      fingerprint before running an external library reference checker. This
+      metadata lets G10 resolve library_ref values; it does not fetch CSLib,
+      run Lean, check symbols, or establish informal/formal semantic alignment.
