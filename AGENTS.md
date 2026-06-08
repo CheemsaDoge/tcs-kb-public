@@ -11,7 +11,9 @@ This repository contains public, citable theoretical computer science knowledge 
   the framework or a private workspace.
 - Use GitHub issues for nontrivial knowledge additions, policy changes, source ingestion, or schema-facing work.
 - One source-ingestion task should normally be one issue, one branch, one PR, and one small reviewable batch.
-- Use branches named `codex/<task-id-or-short-name>`.
+- Use short human-readable branch names. Do not add `codex` or other agent
+  prefixes to issue titles, branch names, or PR titles unless the maintainer
+  explicitly asks for that prefix.
 - Do not push directly to `main`.
 - Every implementation or knowledge addition should go through PR review.
 - Keep durable decisions in repository files; chat transcripts are not project memory.

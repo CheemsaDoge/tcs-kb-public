@@ -27,3 +27,7 @@ fixtures must fail; the positive fixture must pass.
 This guard does not prove source correctness, formal/informal semantic
 alignment, or theorem validity. Human review remains required for accepted
 public artifacts, and validation/gate success is not human review.
+
+`formal-libs/lean-libraries.example.yaml` is a local metadata manifest used by
+G10 to resolve planned `library_ref` values. It is not checker evidence and
+does not make planned CSLib links checked.
