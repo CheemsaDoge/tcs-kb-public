@@ -5,7 +5,7 @@ domain:
 - graph-theory
 status: draft
 created_at: '2026-06-07T00:00:00Z'
-updated_at: '2026-06-07T00:00:00Z'
+updated_at: '2026-06-14T00:00:00Z'
 authors:
 - TCS-Cosheaf contributors
 depends_on:
@@ -23,6 +23,10 @@ evidence:
 - kind: external
   path: external:diestel-graph-theory-ch1
   summary: Public textbook source for standard graph walk terminology.
+- kind: source_note
+  path: sources/books/diestel-graph-theory.md
+  summary: Durable Diestel source note for bibliographic metadata reuse; the
+    artifact-local source locator below remains the review boundary.
 sources:
 - kind: book
   title: Graph Theory
@@ -69,9 +73,9 @@ verification_policy:
   require_alignment_review: false
 review:
   state: requested
-  notes: Draft-only foundation candidate for future human review. Validation and
-    gates are not a substitute for maintainer review, and this artifact is not
-    accepted knowledge.
+  notes: Draft-only foundation candidate for future human review. This update
+    adds a durable source-note pointer only. Validation and gates are not a
+    substitute for maintainer review, and this artifact is not accepted knowledge.
 risk:
   level: medium
   notes: Low-level graph definition, but convention-sensitive because walk definitions
