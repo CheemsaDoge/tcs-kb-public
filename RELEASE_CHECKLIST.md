@@ -3,48 +3,49 @@
 This repository follows the TCS-Cosheaf framework release line and keeps the
 public KB release gates small, policy-focused, and artifact-preserving.
 
-## P0 Exit
+## Current Framework Baseline
 
-- [x] Public KB CI installs the framework from the immutable `v0.1.1` tag:
-  `python -m pip install "git+https://github.com/CheemsaDoge/tcs-cosheaf.git@v0.1.1"`.
-- [x] License policy is Apache-2.0 and the repository includes a root `LICENSE`.
-- [x] Public KB policy forbids private conjectures, unpublished research ideas,
-  and unreviewed accepted LLM-generated artifacts.
-- [x] Public KB proof sketches are policy-bound explanatory artifacts and are
-  not treated as machine-checked proofs or Lean verification evidence.
-- [x] Downstream users are directed to `tcs-cosheaf-workspace-template` instead
-  of manually merging framework, public KB, and private workspace repositories.
-- [x] v0.1.1 formal-link follow-up changes do not add new KB artifacts; any
-  existing artifact changes are metadata-only.
+- [x] Public KB CI installs the framework from the immutable `v0.2.1` tag:
+  `python -m pip install "git+https://github.com/CheemsaDoge/tcs-cosheaf.git@v0.2.1"`.
+- [x] Public KB CI does not install the framework from `main`.
+- [x] Downstream users are directed to `tcs-cosheaf-workspace-template`
+  instead of manually merging framework, public KB, and private workspace
+  repositories.
 
 ## Required Checks
 
-Run these before merging release-followup PRs:
+Run these before merging public KB release-followup or policy PRs:
 
 ```bash
+cosheaf version --json
 cosheaf workspace info
 cosheaf validate
+python scripts/check_public_kb_policy.py --self-test
+python scripts/check_public_kb_policy.py
 cosheaf gate run
 cosheaf gate run --pr-checklist .github/pull_request_template.md
 git diff --check
 ```
 
-## P1 Entry
+## Public KB Policy Boundary
 
-P1 testing hardening may start only after:
+- [x] License policy is Apache-2.0 and the repository includes a root `LICENSE`.
+- [x] Public KB policy forbids private conjectures, unpublished research ideas,
+  and unreviewed accepted LLM-generated artifacts.
+- [x] Accepted public artifacts require source metadata and human review.
+- [x] Validation and gate success are not human review.
+- [x] Public KB proof sketches are policy-bound explanatory artifacts and are
+  not treated as machine-checked proofs or Lean verification evidence.
+- [x] Planned or linked formalizations remain metadata unless a real checker
+  runs and records evidence.
 
-- `CheemsaDoge/tcs-cosheaf` has tag `v0.1.1`.
-- Public KB CI installs `tcs-cosheaf` from `@v0.1.1`, not `@main`.
-- Workspace template CI upgrade to `@v0.1.1` is tracked in the separate
-  workspace-template follow-up PR.
-- Related P0 release-followup PRs are merged and CI passes.
+## Compatibility Validation
 
-## P1 Public KB Validation
-
-- [x] Public KB CI still installs `tcs-cosheaf` from immutable `@v0.1.1`.
-- [x] Public KB CI runs workspace info, validation, gatekeeper, PR checklist
-  gate, and whitespace checks.
-- [x] P1 validation PRs do not add new public KB artifacts or promote drafts.
+- [x] Public KB CI runs workspace info, validation, policy guard self-test,
+  policy guard, gatekeeper, PR checklist gate, and whitespace checks.
+- [x] Compatibility PRs do not add new public KB artifacts or promote drafts.
+- [x] Compatibility PRs do not change review records, formalization metadata,
+  schemas, or accepted-promotion semantics unless explicitly scoped.
 
 ## Proof Sketch Follow-Up
 
