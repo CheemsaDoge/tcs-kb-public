@@ -19,8 +19,11 @@ Use one source note per durable source:
 - `sources/web/` for durable web references that are not better represented as
   books or papers.
 
-This policy defines the convention only. Future PRs may add these directories
-and individual source-note files as small, reviewable changes.
+The repository already uses this convention for
+`sources/books/diestel-graph-theory.md`. Future PRs may add additional book,
+paper, or web notes as small, reviewable changes. Do not mass-import source
+records or create source notes detached from an artifact backlog or review
+issue.
 
 ## Recommended Fields
 
@@ -74,10 +77,24 @@ artifact requirements:
 - Validation and gate success are not substitutes for human review.
 - Source notes do not make LLM-generated content accepted.
 - Source notes do not prove formal/informal semantic alignment.
+- Provider, agent, or model outputs are not source notes, source evidence,
+  human review, or checker results. They may support a draft proposal only when
+  kept out of accepted knowledge and reviewed by a maintainer.
 
 Proof sketches remain explanatory and source-reviewed, not machine-checked.
 They must not claim Lean, CSLib, mathlib, SAT, SMT, or other checker results
 unless a real checker actually ran and recorded a result.
+
+## Current Source Notes
+
+- `sources/books/diestel-graph-theory.md`: durable bibliographic note for
+  Reinhard Diestel's *Graph Theory*, currently used by graph-theory artifacts
+  through artifact-local source metadata.
+
+The Diestel note does not confirm exact page, theorem, lemma, or equation
+locators for individual artifacts. Future artifact PRs must continue to record
+confirmed locators or explicit uncertainty in artifact-local metadata and human
+review notes.
 
 ## Migration Guidance
 

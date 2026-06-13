@@ -47,6 +47,14 @@ git diff --check
 - [x] Compatibility PRs do not change review records, formalization metadata,
   schemas, or accepted-promotion semantics unless explicitly scoped.
 
+## Backlog And Source-Note PRs
+
+- [ ] Backlog/source-note refresh PRs do not add accepted artifacts, promote
+  drafts, alter review records, or change formalization metadata.
+- [ ] Source-note PRs preserve artifact-local source metadata requirements.
+- [ ] Provider, agent, or model outputs are not treated as source evidence,
+  human review, checker evidence, or accepted public knowledge.
+
 ## Proof Sketch Follow-Up
 
 - [ ] Proof-sketch PRs add at most one pilot proof sketch unless the issue
