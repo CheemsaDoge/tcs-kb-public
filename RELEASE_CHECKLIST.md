@@ -52,6 +52,10 @@ git diff --check
 - [ ] Backlog/source-note refresh PRs do not add accepted artifacts, promote
   drafts, alter review records, or change formalization metadata.
 - [ ] Source-note PRs preserve artifact-local source metadata requirements.
+- [ ] Backlog rows use explicit source hygiene labels such as `needs_source`,
+  `needs_source_locator`, `source_note_exists`, or `accepted_no_action`.
+- [ ] Candidates marked `needs_source` or `needs_source_locator` are not
+  described as accepted-ready.
 - [ ] Provider, agent, or model outputs are not treated as source evidence,
   human review, checker evidence, or accepted public knowledge.
 

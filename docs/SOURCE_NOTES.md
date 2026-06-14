@@ -47,6 +47,25 @@ The repository may store source notes as Markdown, YAML, or another documented
 format later. Until a schema is adopted, keep source notes human-readable and
 reviewable.
 
+## Backlog Source Status
+
+Backlog documents should use explicit source hygiene labels instead of vague
+readiness language:
+
+- `source_note_exists`: a durable source note exists in `sources/`.
+- `needs_source_locator`: the broad source is known, but the exact
+  artifact-local locator still needs maintainer confirmation.
+- `needs_source`: the candidate only has a broad source family, placeholder
+  reference, or no durable source note yet.
+- `accepted_no_action`: the artifact already exists under accepted knowledge
+  and should not be re-added by a backlog cleanup PR.
+
+`needs_source` means a future PR must add or identify a durable source note and
+artifact-local source metadata before any accepted artifact can be proposed.
+`needs_source_locator` means maintainers must still confirm the exact chapter,
+section, page, theorem, or URL locator before accepted status. Neither label is
+evidence of human review.
+
 ## Locator Policy
 
 Do not fabricate page, theorem, lemma, chapter, section, or equation locators.
