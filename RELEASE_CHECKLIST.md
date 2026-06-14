@@ -5,8 +5,8 @@ public KB release gates small, policy-focused, and artifact-preserving.
 
 ## Current Framework Baseline
 
-- [x] Public KB CI installs the framework from the immutable `v0.2.3` tag:
-  `python -m pip install "git+https://github.com/CheemsaDoge/tcs-cosheaf.git@v0.2.3"`.
+- [x] Public KB CI installs the framework from the immutable `v0.2.4` tag:
+  `python -m pip install "git+https://github.com/CheemsaDoge/tcs-cosheaf.git@v0.2.4"`.
 - [x] Public KB CI does not install the framework from `main`.
 - [x] Downstream users are directed to `tcs-cosheaf-workspace-template`
   instead of manually merging framework, public KB, and private workspace
