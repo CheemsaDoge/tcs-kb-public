@@ -46,6 +46,10 @@ Validation or gate success alone is not enough to mark an artifact accepted.
 Proof sketches are explanatory source-reviewed artifacts, not machine-checked
 proofs. See `docs/PROOF_SKETCH_POLICY.md`.
 
+Artifact-level failure logs, when present, are public research memory only.
+They do not prove, refute, verify, review, accept, or promote artifacts by
+themselves. See `docs/FAILURE_LOG_POLICY.md`.
+
 The repository includes `formal-libs/lean-libraries.example.yaml` so existing
 planned CSLib formal-link metadata resolves under the G10 formal-link gate.
 That manifest is placeholder metadata only. It does not fetch CSLib, run Lean,

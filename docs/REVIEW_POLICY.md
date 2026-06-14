@@ -56,3 +56,15 @@ metadata.
 Validation and gate success are required workflow evidence for accepted
 artifacts, but they are not substitutes for human review. Skipped verifier
 results are not passes.
+
+## Failure Log Review
+
+Failure-log entries are research memory, not authority. Reviewers should verify
+that any `failure_log` entry is public, preserves its origin and limitations,
+does not leak private workspace material, and does not claim proof, refutation,
+verifier success, checked counterexample evidence, human review, gate success,
+accepted status, or promotion evidence.
+
+Accepted-path failure logs require the same source and review discipline as
+other accepted artifact metadata. Unreviewed provider, agent, or LLM failure
+logs must not be copied into accepted public artifacts.

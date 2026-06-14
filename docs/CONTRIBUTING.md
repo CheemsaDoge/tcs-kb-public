@@ -45,6 +45,11 @@ Formal links are metadata unless a real checker verifies them and records
 evidence. Planned formal links do not mean Lean, CSLib, mathlib, SAT, SMT, or
 semantic alignment has been checked.
 
+Failure logs are public research memory only. Do not include private workspace
+failure notes, unreviewed provider or agent failure dumps, secrets, or claims
+that a failure log proves, refutes, verifies, reviews, accepts, or promotes an
+artifact. See `docs/FAILURE_LOG_POLICY.md`.
+
 ## PR Scope
 
 One issue should normally become one branch and one PR. Avoid mass imports.

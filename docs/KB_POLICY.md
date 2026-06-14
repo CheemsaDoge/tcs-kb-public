@@ -43,6 +43,20 @@ unless a later formal-check workflow actually verifies it.
 
 See `docs/PROOF_SKETCH_POLICY.md`.
 
+## Failure Logs
+
+Artifact-level `failure_log` entries are public research memory only. They can
+record reviewed failed directions, source-locator dead ends, or formalization
+alignment attempts, but they are not proof, refutation, verifier evidence,
+human review, gate success, accepted status, or promotion evidence by
+themselves.
+
+Unreviewed LLM, hosted-provider, or agent failure dumps must not enter accepted
+public paths. Downstream private failure memory belongs in downstream private
+KB overlays unless maintainers explicitly review it through a public-KB PR.
+
+See `docs/FAILURE_LOG_POLICY.md`.
+
 ## Promotion
 
 Draft artifacts may be promoted only after complete source metadata,
