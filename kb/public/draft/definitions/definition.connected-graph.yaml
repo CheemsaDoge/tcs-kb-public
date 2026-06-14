@@ -5,7 +5,7 @@ domain:
 - graph-theory
 status: draft
 created_at: '2026-06-06T00:00:00Z'
-updated_at: '2026-06-06T00:00:00Z'
+updated_at: '2026-06-14T00:00:00Z'
 authors:
 - TCS-Cosheaf contributors
 depends_on:
@@ -21,6 +21,11 @@ evidence:
 - kind: external
   path: external:diestel-graph-theory-ch1
   summary: Public textbook source for standard graph connectedness terminology.
+- kind: source_note
+  path: sources/books/diestel-graph-theory.md
+  summary: Durable Diestel source note for bibliographic metadata reuse; this
+    draft still requires artifact-local locator and alias-review confirmation
+    before any accepted promotion.
 sources:
 - kind: book
   title: Graph Theory
@@ -34,7 +39,9 @@ sources:
   page: Chapter 1, Section 1.4; exact page to be confirmed.
   notes: Sixth edition preview; Chapter 1, Section 1.4 is the cited locator for
     graph connectedness terminology. This draft records a connected-graph naming
-    convention and does not claim a newly verified exact page locator.
+    convention and does not claim a newly verified exact page locator. The
+    durable source note is supplementary and does not replace artifact-local
+    source metadata.
 formalizations:
 - id: cslib.connected-graph-definition
   system: lean4
@@ -64,9 +71,11 @@ verification_policy:
   require_alignment_review: false
 review:
   state: requested
-  notes: Draft-only foundation candidate for future human review. Validation and
-    gates are not a substitute for maintainer review, and this artifact is not
-    accepted knowledge.
+  notes: Draft-only foundation candidate for future human review. A maintainer
+    must still decide whether this alias adds value beyond `definition.connected`
+    and must confirm the exact source locator before any accepted promotion.
+    Validation and gates are not a substitute for maintainer review, and this
+    artifact is not accepted knowledge.
 risk:
   level: low
   notes: Low-risk alias-style draft depending on accepted connectedness metadata;
