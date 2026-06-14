@@ -27,6 +27,7 @@ Public KB policy checklist:
 - [ ] Validation/gate success is not presented as human review.
 - [ ] Formalization status is stated as planned/linked/checked/not applicable.
 - [ ] Planned or linked formalizations are not presented as Lean/mathlib/CSLib/SAT/SMT verification.
+- [ ] Any `failure_log` changes are public, reviewed as needed, non-authoritative, and do not include private/provider dumps or promotion claims.
 
 ## Interface Changes
 
