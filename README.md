@@ -55,6 +55,11 @@ context only. They do not replace human review, source metadata, validation,
 gates, verifier policy, or accepted promotion. See
 `docs/CHECKED_EVIDENCE_POLICY.md`.
 
+Strategy plans and strategy review exports are public review context only. They
+cannot replace source metadata, validation, gates, verifier evidence, human
+review, or accepted promotion, and private workspace strategy plans must not be
+copied into this public KB. See `docs/STRATEGY_PLAN_POLICY.md`.
+
 The repository includes `formal-libs/lean-libraries.example.yaml` so existing
 planned CSLib formal-link metadata resolves under the G10 formal-link gate.
 That manifest is placeholder metadata only. It does not fetch CSLib, run Lean,

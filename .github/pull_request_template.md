@@ -30,6 +30,7 @@ Public KB policy checklist:
 - [ ] Any `failure_log` changes are public, reviewed as needed, non-authoritative, and do not include private/provider dumps or promotion claims.
 - [ ] Any checked counterexample evidence is distinguished from candidate evidence and is not presented as proof, human review, accepted refutation, accepted status, verifier pass, gate pass, or promotion authority.
 - [ ] Any research-run records or review exports are public-safe provenance only and do not contain private material, secrets, hidden reasoning, or unreviewed provider dumps.
+- [ ] Any strategy plans or strategy review exports are public-safe review context only and are not presented as source metadata, verifier evidence, human review, accepted status, accepted refutation, gate pass, or promotion authority.
 
 ## Interface Changes
 
