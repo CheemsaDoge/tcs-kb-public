@@ -50,6 +50,11 @@ Artifact-level failure logs, when present, are public research memory only.
 They do not prove, refute, verify, review, accept, or promote artifacts by
 themselves. See `docs/FAILURE_LOG_POLICY.md`.
 
+Checked counterexample evidence and research-run records are public review
+context only. They do not replace human review, source metadata, validation,
+gates, verifier policy, or accepted promotion. See
+`docs/CHECKED_EVIDENCE_POLICY.md`.
+
 The repository includes `formal-libs/lean-libraries.example.yaml` so existing
 planned CSLib formal-link metadata resolves under the G10 formal-link gate.
 That manifest is placeholder metadata only. It does not fetch CSLib, run Lean,

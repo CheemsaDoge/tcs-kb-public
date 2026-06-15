@@ -68,3 +68,21 @@ accepted status, or promotion evidence.
 Accepted-path failure logs require the same source and review discipline as
 other accepted artifact metadata. Unreviewed provider, agent, or LLM failure
 logs must not be copied into accepted public artifacts.
+
+## Checked Evidence And Research-Run Review
+
+Checked counterexample evidence is public review context only. Reviewers should
+verify that a checked-evidence record is public-safe, distinguishes candidate
+evidence from checked evidence, records the check method and support, preserves
+limitations, and does not claim human review, proof, accepted refutation,
+accepted status, verifier pass, gate pass, or promotion authority.
+
+Research-run records are provenance only. They may help reviewers see which
+commands were run and which outputs were referenced, but they do not prove
+correctness and do not replace validation, gates, source review, or human
+review.
+
+Run records or review exports included in public KB PRs must not contain
+private workspace material, unreviewed provider dumps, secrets, hidden
+reasoning, `.env` content, or full private KB text. Accepted public artifacts
+must not depend on research-run records as a substitute for source metadata.
