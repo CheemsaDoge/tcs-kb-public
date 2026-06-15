@@ -57,6 +57,26 @@ KB overlays unless maintainers explicitly review it through a public-KB PR.
 
 See `docs/FAILURE_LOG_POLICY.md`.
 
+## Checked Evidence And Research Runs
+
+Checked counterexample evidence may be stored or referenced as public review
+context when it has been reviewed for public safety and limitations. It is not
+human review, proof, accepted refutation, accepted status, verifier pass, gate
+pass, promotion authority, or a replacement for source metadata.
+
+Research-run records may document operator provenance for public-KB PRs. They
+must not include private workspace material, unreviewed provider dumps, API
+keys, hidden reasoning, `.env` content, or full private KB text in accepted
+public paths. Run records are provenance only and do not make a public artifact
+accepted.
+
+Candidates and checked evidence must be labeled separately. A
+`candidate_counterexample` is proposed evidence only; checked counterexample
+evidence requires an explicit checked-evidence record with method, result,
+support references, checker label, and limitations.
+
+See `docs/CHECKED_EVIDENCE_POLICY.md`.
+
 ## Promotion
 
 Draft artifacts may be promoted only after complete source metadata,
