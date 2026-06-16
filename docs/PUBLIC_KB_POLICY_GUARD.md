@@ -10,6 +10,10 @@ The guard checks public KB YAML records for:
 - accepted artifacts without human review metadata;
 - public artifacts depending on private artifacts;
 - skipped verifier results presented as passes;
+- operator, MCP, provider, LLM, or agent output structurally claimed as human
+  review;
+- operator, MCP, provider, LLM, or agent output structurally claimed as
+  verifier-pass authority;
 - checked formalizations without checker evidence;
 - private-looking paths, tags, or explicit private/unpublished markers inside
   public KB records.
@@ -30,6 +34,9 @@ public artifacts, and validation/gate success is not human review.
 It also does not prove that artifact `failure_log` entries are complete,
 source-reviewed, or semantically correct; reviewers must apply
 `docs/FAILURE_LOG_POLICY.md` when failure memory is added or changed.
+Operator policy is documented in `docs/OPERATOR_POLICY.md`; the guard only
+checks common authority-spoofing patterns and does not replace maintainer
+review.
 
 `formal-libs/lean-libraries.example.yaml` is a local metadata manifest used by
 G10 to resolve planned `library_ref` values. It is not checker evidence and

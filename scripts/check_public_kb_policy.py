@@ -32,6 +32,42 @@ PRIVATE_MARKERS = (
 CHECKED_STATUSES = {"checked"}
 SKIPPED_STATUSES = {"skipped"}
 PASS_STATUSES = {"pass", "passed", "ok", "success"}
+NON_HUMAN_AUTHORITY_MARKERS = (
+    "agent",
+    "ai",
+    "chatgpt",
+    "codex",
+    "llm",
+    "mcp",
+    "model",
+    "operator",
+    "provider",
+)
+REVIEW_AUTHORITY_KEYS = (
+    "actor_kind",
+    "created_by",
+    "created_with",
+    "origin",
+    "review_kind",
+    "review_source",
+    "reviewer",
+    "reviewer_kind",
+    "reviewed_by",
+    "source",
+    "source_kind",
+)
+VERIFIER_AUTHORITY_KEYS = (
+    "actor_kind",
+    "checker_kind",
+    "created_by",
+    "created_with",
+    "origin",
+    "provider",
+    "source",
+    "source_kind",
+    "tool",
+    "tool_name",
+)
 
 
 class PolicyError:
@@ -75,6 +111,11 @@ def string_values(value: Any) -> list[str]:
     return []
 
 
+def value_has_nonhuman_authority_marker(value: Any) -> bool:
+    text = "\n".join(string_values(value)).lower()
+    return any(marker in text for marker in NON_HUMAN_AUTHORITY_MARKERS)
+
+
 def has_source_metadata(record: dict[str, Any]) -> bool:
     sources = record.get("sources")
     if not isinstance(sources, list) or not sources:
@@ -92,6 +133,16 @@ def has_source_metadata(record: dict[str, Any]) -> bool:
 def has_human_review(record: dict[str, Any]) -> bool:
     review = record.get("review")
     return isinstance(review, dict) and review.get("state") == "human_reviewed"
+
+
+def nonhuman_output_claimed_as_human_review(record: dict[str, Any]) -> bool:
+    review = record.get("review")
+    if not isinstance(review, dict) or review.get("state") != "human_reviewed":
+        return False
+    for key in REVIEW_AUTHORITY_KEYS:
+        if key in review and value_has_nonhuman_authority_marker(review[key]):
+            return True
+    return False
 
 
 def has_private_dependency(record: dict[str, Any]) -> bool:
@@ -151,6 +202,23 @@ def skipped_treated_as_pass(record: dict[str, Any]) -> bool:
     return False
 
 
+def nonhuman_output_claimed_as_verifier_pass(record: dict[str, Any]) -> bool:
+    for result in verifier_results(record):
+        status = str(result.get("status", "")).lower()
+        verdict = str(result.get("verdict", "")).lower()
+        conclusion = str(result.get("conclusion", "")).lower()
+        if not (
+            status in PASS_STATUSES
+            or verdict in PASS_STATUSES
+            or conclusion in PASS_STATUSES
+        ):
+            continue
+        for key in VERIFIER_AUTHORITY_KEYS:
+            if key in result and value_has_nonhuman_authority_marker(result[key]):
+                return True
+    return False
+
+
 def checked_formalization_without_evidence(record: dict[str, Any]) -> bool:
     for formalization in as_list(record.get("formalizations")):
         if not isinstance(formalization, dict):
@@ -180,10 +248,18 @@ def check_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
             errors.append(PolicyError(path, "accepted artifact is missing source metadata"))
         if not has_human_review(record):
             errors.append(PolicyError(path, "accepted artifact is missing human review metadata"))
+        if nonhuman_output_claimed_as_human_review(record):
+            errors.append(
+                PolicyError(path, "operator or model output is claimed as human review")
+            )
     if has_private_dependency(record):
         errors.append(PolicyError(path, "public artifact depends on a private artifact"))
     if skipped_treated_as_pass(record):
         errors.append(PolicyError(path, "skipped verifier result is treated as pass"))
+    if nonhuman_output_claimed_as_verifier_pass(record):
+        errors.append(
+            PolicyError(path, "operator or model output is claimed as verifier pass")
+        )
     if checked_formalization_without_evidence(record):
         errors.append(PolicyError(path, "checked formalization lacks checker evidence"))
     if has_private_marker(path, record):
@@ -262,6 +338,20 @@ def bad_artifact(case: str) -> str:
         base["depends_on"] = ["private:claim.secret"]
     elif case == "skipped_as_pass":
         base["verifier_results"] = [{"status": "skipped", "verdict": "pass"}]
+    elif case == "operator_as_human_review":
+        base["review"] = {
+            "state": "human_reviewed",
+            "reviewer_kind": "mcp_operator",
+            "notes": "This fixture tries to spoof human review.",
+        }
+    elif case == "operator_as_verifier_pass":
+        base["verifier_results"] = [
+            {
+                "status": "pass",
+                "tool": "codex-mcp-operator",
+                "notes": "This fixture tries to spoof checker authority.",
+            }
+        ]
     elif case == "checked_without_evidence":
         base["formalizations"] = [{"id": "bad.checked", "status": "checked", "system": "lean4"}]
     elif case == "private_marker":
@@ -278,6 +368,8 @@ def run_self_test() -> int:
         "missing_human_review": "missing human review metadata",
         "private_dependency": "depends on a private artifact",
         "skipped_as_pass": "skipped verifier result is treated as pass",
+        "operator_as_human_review": "operator or model output is claimed as human review",
+        "operator_as_verifier_pass": "operator or model output is claimed as verifier pass",
         "checked_without_evidence": "checked formalization lacks checker evidence",
         "private_marker": "private-looking marker",
     }

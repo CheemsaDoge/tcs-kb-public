@@ -77,6 +77,20 @@ support references, checker label, and limitations.
 
 See `docs/CHECKED_EVIDENCE_POLICY.md`.
 
+## Operator, MCP, And Provider Outputs
+
+Operator, Codex, MCP, provider, LLM, and agent outputs may be used only as
+bounded public review context. They are not source metadata, human review,
+proof, verifier pass, gate pass, accepted status, accepted refutation, or
+promotion authority.
+
+Accepted artifacts must not use structured review metadata to claim an
+operator or model as the human reviewer. Verifier results must not claim a pass
+when the only authority is an operator, MCP adapter, hosted provider, LLM, or
+agent output.
+
+See `docs/OPERATOR_POLICY.md`.
+
 ## Promotion
 
 Draft artifacts may be promoted only after complete source metadata,
