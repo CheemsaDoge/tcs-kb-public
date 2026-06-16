@@ -14,6 +14,11 @@ The guard checks public KB YAML records for:
   review;
 - operator, MCP, provider, LLM, or agent output structurally claimed as
   verifier-pass authority;
+- operator handoff records structurally claimed as accepted artifact source
+  metadata;
+- operator handoff exports under `reviews/operator/` that contain private
+  paths, secrets, hidden reasoning, raw provider payload markers, or authority
+  fields set to true;
 - checked formalizations without checker evidence;
 - private-looking paths, tags, or explicit private/unpublished markers inside
   public KB records.
@@ -34,8 +39,9 @@ public artifacts, and validation/gate success is not human review.
 It also does not prove that artifact `failure_log` entries are complete,
 source-reviewed, or semantically correct; reviewers must apply
 `docs/FAILURE_LOG_POLICY.md` when failure memory is added or changed.
-Operator policy is documented in `docs/OPERATOR_POLICY.md`; the guard only
-checks common authority-spoofing patterns and does not replace maintainer
+Operator policy is documented in `docs/OPERATOR_POLICY.md` and
+`docs/OPERATOR_HANDOFF_POLICY.md`; the guard only checks common
+authority-spoofing and public-safety patterns and does not replace maintainer
 review.
 
 `formal-libs/lean-libraries.example.yaml` is a local metadata manifest used by

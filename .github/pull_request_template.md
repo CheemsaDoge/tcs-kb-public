@@ -31,6 +31,7 @@ Public KB policy checklist:
 - [ ] Any checked counterexample evidence is distinguished from candidate evidence and is not presented as proof, human review, accepted refutation, accepted status, verifier pass, gate pass, or promotion authority.
 - [ ] Any research-run records or review exports are public-safe provenance only and do not contain private material, secrets, hidden reasoning, or unreviewed provider dumps.
 - [ ] Any strategy plans or strategy review exports are public-safe review context only and are not presented as source metadata, verifier evidence, human review, accepted status, accepted refutation, gate pass, or promotion authority.
+- [ ] Any operator handoff records are public-safe review context only and are not presented as source metadata, human review, verifier evidence, accepted status, accepted refutation, gate pass, or promotion authority.
 
 ## Interface Changes
 

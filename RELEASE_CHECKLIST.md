@@ -43,6 +43,9 @@ git diff --check
 - [x] Operator, Codex, MCP, provider, LLM, and agent outputs remain public
   review context only and do not create human review, verifier pass, accepted
   status, accepted refutation, or promotion authority.
+- [x] Operator handoff records remain public review context only and do not
+  replace source metadata, human review, verifier evidence, accepted status,
+  accepted refutation, or promotion authority.
 
 ## Compatibility Validation
 
@@ -65,6 +68,9 @@ git diff --check
   human review, checker evidence, or accepted public knowledge.
 - [ ] Operator/MCP outputs are not treated as human review, verifier pass,
   accepted status, accepted refutation, or promotion authority.
+- [ ] Operator handoff records, if included, are public-safe review context and
+  do not contain private workspace paths, secrets, hidden reasoning, raw
+  provider payloads, or authority claims.
 
 ## Proof Sketch Follow-Up
 

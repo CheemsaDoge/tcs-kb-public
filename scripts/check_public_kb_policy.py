@@ -43,6 +43,41 @@ NON_HUMAN_AUTHORITY_MARKERS = (
     "operator",
     "provider",
 )
+OPERATOR_HANDOFF_SOURCE_MARKERS = (
+    "operator handoff",
+    "operator_handoff",
+    "operator-session",
+    "operator session",
+    "reviews/operator",
+)
+OPERATOR_HANDOFF_FORBIDDEN_MARKERS = (
+    ".env",
+    "api key",
+    "api_key",
+    "authorization:",
+    "bearer ",
+    "chain of thought",
+    "chain-of-thought",
+    "context/tasks/",
+    "environment dump",
+    "hidden reasoning",
+    "kb/private",
+    "private workspace",
+    "private_research",
+    "provider request",
+    "provider response",
+    "provider_request",
+    "provider_response",
+    "raw provider",
+    "\\private\\",
+    "/private/",
+)
+OPERATOR_HANDOFF_FALSE_AUTHORITY_KEYS = (
+    "accepted_write_performed",
+    "human_review_created",
+    "promotion_performed",
+    "verifier_result_mutated",
+)
 REVIEW_AUTHORITY_KEYS = (
     "actor_kind",
     "created_by",
@@ -111,6 +146,25 @@ def string_values(value: Any) -> list[str]:
     return []
 
 
+def string_values_and_keys(value: Any) -> list[str]:
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, dict):
+        values: list[str] = []
+        for key, item in value.items():
+            values.append(str(key))
+            values.extend(string_values_and_keys(item))
+        return values
+    if isinstance(value, list):
+        values = []
+        for item in value:
+            values.extend(string_values_and_keys(item))
+        return values
+    if value is None:
+        return []
+    return [str(value)]
+
+
 def value_has_nonhuman_authority_marker(value: Any) -> bool:
     text = "\n".join(string_values(value)).lower()
     return any(marker in text for marker in NON_HUMAN_AUTHORITY_MARKERS)
@@ -127,6 +181,19 @@ def has_source_metadata(record: dict[str, Any]) -> bool:
             locator = source.get("page") or source.get("theorem_number") or source.get("url") or source.get("doi")
             if locator:
                 return True
+    return False
+
+
+def operator_handoff_claimed_as_source_metadata(record: dict[str, Any]) -> bool:
+    sources = record.get("sources")
+    if not isinstance(sources, list):
+        return False
+    for source in sources:
+        if not isinstance(source, dict):
+            continue
+        text = "\n".join(string_values_and_keys(source)).lower()
+        if any(marker in text for marker in OPERATOR_HANDOFF_SOURCE_MARKERS):
+            return True
     return False
 
 
@@ -240,6 +307,44 @@ def checked_formalization_without_evidence(record: dict[str, Any]) -> bool:
     return False
 
 
+def truthy_authority_value(value: Any) -> bool:
+    if value is True:
+        return True
+    if isinstance(value, str):
+        return value.strip().lower() in {"true", "yes", "1"}
+    return False
+
+
+def has_true_operator_handoff_authority_field(value: Any) -> bool:
+    if isinstance(value, dict):
+        for key, item in value.items():
+            if key in OPERATOR_HANDOFF_FALSE_AUTHORITY_KEYS and truthy_authority_value(item):
+                return True
+            if has_true_operator_handoff_authority_field(item):
+                return True
+    elif isinstance(value, list):
+        return any(has_true_operator_handoff_authority_field(item) for item in value)
+    return False
+
+
+def operator_handoff_has_forbidden_marker(record: dict[str, Any]) -> bool:
+    text = "\n".join(string_values_and_keys(record)).lower()
+    return any(marker in text for marker in OPERATOR_HANDOFF_FORBIDDEN_MARKERS)
+
+
+def check_operator_handoff_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
+    errors: list[PolicyError] = []
+    if record.get("review_context_only") is not True:
+        errors.append(PolicyError(path, "operator handoff is not marked review_context_only"))
+    if has_true_operator_handoff_authority_field(record):
+        errors.append(PolicyError(path, "operator handoff claims accepted/review/promotion authority"))
+    if operator_handoff_has_forbidden_marker(record):
+        errors.append(
+            PolicyError(path, "operator handoff contains private, secret, reasoning, or provider-payload marker")
+        )
+    return errors
+
+
 def check_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
     errors: list[PolicyError] = []
     status = str(record.get("status", "")).lower()
@@ -248,6 +353,10 @@ def check_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
             errors.append(PolicyError(path, "accepted artifact is missing source metadata"))
         if not has_human_review(record):
             errors.append(PolicyError(path, "accepted artifact is missing human review metadata"))
+        if operator_handoff_claimed_as_source_metadata(record):
+            errors.append(
+                PolicyError(path, "operator handoff is claimed as source metadata")
+            )
         if nonhuman_output_claimed_as_human_review(record):
             errors.append(
                 PolicyError(path, "operator or model output is claimed as human review")
@@ -283,6 +392,14 @@ def check_repository(repo_root: Path) -> list[PolicyError]:
             errors.append(PolicyError(path, f"could not load YAML: {exc}"))
             continue
         errors.extend(check_record(path, record))
+    operator_review_root = repo_root / "reviews" / "operator"
+    for path in iter_yaml_files(operator_review_root):
+        try:
+            record = load_yaml(path)
+        except Exception as exc:  # pragma: no cover - surfaced through CLI
+            errors.append(PolicyError(path, f"could not load YAML: {exc}"))
+            continue
+        errors.extend(check_operator_handoff_record(path, record))
     return errors
 
 
@@ -356,10 +473,62 @@ def bad_artifact(case: str) -> str:
         base["formalizations"] = [{"id": "bad.checked", "status": "checked", "system": "lean4"}]
     elif case == "private_marker":
         base["tags"] = ["private"]
+    elif case == "operator_handoff_as_source":
+        base["sources"] = [
+            {
+                "kind": "operator_handoff",
+                "title": "Operator handoff review context",
+                "authors": ["workspace operator"],
+                "year": 2026,
+                "url": "reviews/operator/handoff.example.yaml",
+            }
+        ]
     else:
         raise ValueError(case)
     base["id"] = f"definition.{case}"
     return yaml.safe_dump(base, sort_keys=False)
+
+
+def good_operator_handoff() -> str:
+    return """\
+kind: operator_handoff_export
+handoff_id: handoff.public.example
+review_context_only: true
+accepted_write_performed: false
+human_review_created: false
+promotion_performed: false
+verifier_result_mutated: false
+summary: Public-safe handoff fixture for policy guard self-test.
+checks:
+- kind: validate
+  status: pass
+- kind: test
+  status: skipped
+  summary: Skipped operator-session checks are not pass evidence.
+"""
+
+
+def bad_operator_handoff(case: str) -> str:
+    base = yaml.safe_load(good_operator_handoff())
+    assert isinstance(base, dict)
+    if case == "operator_handoff_private_marker":
+        base["policy_mode"] = "private_research"
+        base["referenced_files"] = ["kb/private/claims/claim.secret.yaml"]
+    elif case == "operator_handoff_authority_true":
+        base["human_review_created"] = True
+    elif case == "operator_handoff_provider_dump":
+        base["provider_response"] = {"raw": "provider response payload should not be imported"}
+    else:
+        raise ValueError(case)
+    base["handoff_id"] = f"handoff.{case}"
+    return yaml.safe_dump(base, sort_keys=False)
+
+
+def write_operator_handoff_fixture(root: Path, name: str, body: str) -> Path:
+    path = root / "reviews" / "operator" / f"{name}.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(body, encoding="utf-8")
+    return path
 
 
 def run_self_test() -> int:
@@ -372,10 +541,15 @@ def run_self_test() -> int:
         "operator_as_verifier_pass": "operator or model output is claimed as verifier pass",
         "checked_without_evidence": "checked formalization lacks checker evidence",
         "private_marker": "private-looking marker",
+        "operator_handoff_as_source": "operator handoff is claimed as source metadata",
+        "operator_handoff_private_marker": "operator handoff contains private, secret, reasoning, or provider-payload marker",
+        "operator_handoff_authority_true": "operator handoff claims accepted/review/promotion authority",
+        "operator_handoff_provider_dump": "operator handoff contains private, secret, reasoning, or provider-payload marker",
     }
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         write_fixture(root, "definition.good", good_artifact())
+        write_operator_handoff_fixture(root, "handoff.good", good_operator_handoff())
         positive_errors = check_repository(root)
         if positive_errors:
             print("positive fixture failed:", file=sys.stderr)
@@ -384,7 +558,10 @@ def run_self_test() -> int:
             return 1
         for case, expected_message in cases.items():
             case_root = root / case
-            write_fixture(case_root, case, bad_artifact(case))
+            if case.startswith("operator_handoff_") and case != "operator_handoff_as_source":
+                write_operator_handoff_fixture(case_root, case, bad_operator_handoff(case))
+            else:
+                write_fixture(case_root, case, bad_artifact(case))
             errors = check_repository(case_root)
             if not errors:
                 print(f"negative fixture did not fail: {case}", file=sys.stderr)
