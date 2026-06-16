@@ -63,7 +63,7 @@ copied into this public KB. See `docs/STRATEGY_PLAN_POLICY.md`.
 Operator, Codex, MCP, provider, research-run, checked-evidence, and strategy
 outputs are review context only. They cannot create human review, verifier
 pass, accepted status, accepted refutation, or promotion authority. See
-`docs/OPERATOR_POLICY.md`.
+`docs/OPERATOR_POLICY.md` and `docs/OPERATOR_HANDOFF_POLICY.md`.
 
 The repository includes `formal-libs/lean-libraries.example.yaml` so existing
 planned CSLib formal-link metadata resolves under the G10 formal-link gate.
