@@ -40,6 +40,9 @@ git diff --check
   not treated as machine-checked proofs or Lean verification evidence.
 - [x] Planned or linked formalizations remain metadata unless a real checker
   runs and records evidence.
+- [x] Operator, Codex, MCP, provider, LLM, and agent outputs remain public
+  review context only and do not create human review, verifier pass, accepted
+  status, accepted refutation, or promotion authority.
 
 ## Compatibility Validation
 
@@ -60,6 +63,8 @@ git diff --check
   described as accepted-ready.
 - [ ] Provider, agent, or model outputs are not treated as source evidence,
   human review, checker evidence, or accepted public knowledge.
+- [ ] Operator/MCP outputs are not treated as human review, verifier pass,
+  accepted status, accepted refutation, or promotion authority.
 
 ## Proof Sketch Follow-Up
 
