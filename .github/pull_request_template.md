@@ -34,6 +34,7 @@ Public KB policy checklist:
 - [ ] Any operator handoff records are public-safe review context only and are not presented as source metadata, human review, verifier evidence, accepted status, accepted refutation, gate pass, or promotion authority.
 - [ ] Any research-loop records are public-safe review context only and are not presented as source metadata, accepted proof, human review, verifier evidence, accepted status, accepted refutation, gate pass, or promotion authority.
 - [ ] Any reviewable-workflow packets are public-safe review context only and are not presented as source metadata, accepted proof, human review, verifier evidence, gate pass, accepted status, accepted refutation, or promotion authority.
+- [ ] Any workflow cross-check, evidence, gap, checker sidecar, or checker/cross-check eval reports are public-safe review context only and are not presented as source metadata, accepted proof, accepted theorem/refutation, human review, verifier pass, gate pass, accepted status, or promotion authority.
 
 ## Interface Changes
 

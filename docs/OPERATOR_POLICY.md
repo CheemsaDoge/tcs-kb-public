@@ -55,10 +55,17 @@ proposal context, or handoff context, but it must not be recorded as source
 metadata, accepted proof, human review, verifier evidence, gate evidence,
 accepted status, accepted refutation, or promotion authority.
 
+Workflow cross-check reports, workflow evidence reports, workflow gap reports,
+checker sidecars, and checker/cross-check eval outputs have the same review
+context boundary. They may help distinguish checked, failed, skipped,
+inconclusive, unsourced, or unreviewed items, but they must not be recorded as
+source metadata, accepted proof, accepted theorem/refutation, human review,
+verifier pass, gate pass, accepted status, or promotion authority.
+
 The public KB policy guard rejects accepted artifacts that structurally claim
 operator, workflow, or model output as human review and rejects verifier-pass
 records that structurally identify operator/model output as the checker
-authority.
+authority. It also rejects common cross-check report authority spoofing.
 
 ## Downstream Workspace Boundary
 

@@ -68,6 +68,25 @@ WORKFLOW_SOURCE_MARKERS = (
     "workflow record",
     "workflow_output",
 )
+CROSSCHECK_SOURCE_MARKERS = (
+    ".cosheaf/checker-runs",
+    ".cosheaf/crosscheck-demo",
+    ".cosheaf/workflows",
+    "checker crosscheck",
+    "checker-crosscheck",
+    "checker_crosscheck",
+    "cross-check eval",
+    "cross-check report",
+    "crosscheck report",
+    "crosscheck_report",
+    "gap report",
+    "workflow cross-check",
+    "workflow evidence report",
+    "workflow gap report",
+    "workflow_crosscheck_report",
+    "workflow_evidence_report",
+    "workflow_gap_report",
+)
 OPERATOR_HANDOFF_FORBIDDEN_MARKERS = (
     ".env",
     "api key",
@@ -97,16 +116,23 @@ RESEARCH_LOOP_FORBIDDEN_MARKERS = OPERATOR_HANDOFF_FORBIDDEN_MARKERS + (
     "source_metadata_created",
 )
 OPERATOR_HANDOFF_FALSE_AUTHORITY_KEYS = (
+    "accepted_refutation_created",
+    "accepted_status_created",
     "accepted_proof_created",
+    "accepted_theorem_created",
     "accepted_status_claimed",
     "accepted_write_performed",
+    "checker_pass_is_accepted",
+    "checked_pass_is_accepted",
     "gate_result_mutated",
     "gate_pass_created",
+    "gate_pass_claimed",
     "human_review_created",
     "promotion_performed",
     "source_metadata_created",
     "verifier_result_mutated",
     "verifier_pass_created",
+    "verifier_pass_claimed",
 )
 REVIEW_AUTHORITY_KEYS = (
     "actor_kind",
@@ -253,6 +279,19 @@ def workflow_claimed_as_source_metadata(record: dict[str, Any]) -> bool:
     return False
 
 
+def crosscheck_claimed_as_source_metadata(record: dict[str, Any]) -> bool:
+    sources = record.get("sources")
+    if not isinstance(sources, list):
+        return False
+    for source in sources:
+        if not isinstance(source, dict):
+            continue
+        text = "\n".join(string_values_and_keys(source)).lower()
+        if any(marker in text for marker in CROSSCHECK_SOURCE_MARKERS):
+            return True
+    return False
+
+
 def research_loop_claimed_as_accepted_proof(record: dict[str, Any]) -> bool:
     status = str(record.get("status", "")).lower()
     artifact_type = str(record.get("type", "")).lower()
@@ -279,6 +318,29 @@ def workflow_claimed_as_accepted_proof(record: dict[str, Any]) -> bool:
         or "proof authority" in text
         or "proves the theorem" in text
     )
+
+
+def crosscheck_claimed_as_accepted_authority(record: dict[str, Any]) -> bool:
+    if str(record.get("status", "")).lower() != "accepted":
+        return False
+    text = "\n".join(string_values_and_keys(record)).lower()
+    if not any(marker in text for marker in CROSSCHECK_SOURCE_MARKERS):
+        return False
+    authority_phrases = (
+        "accepted proof",
+        "accepted refutation",
+        "accepted status",
+        "accepted theorem",
+        "accepted_proof",
+        "accepted_refutation",
+        "accepted_status",
+        "accepted_theorem",
+        "proof authority",
+        "promotion authority",
+        "proves the theorem",
+        "refutes the theorem",
+    )
+    return any(phrase in text for phrase in authority_phrases)
 
 
 def has_human_review(record: dict[str, Any]) -> bool:
@@ -370,6 +432,51 @@ def nonhuman_output_claimed_as_verifier_pass(record: dict[str, Any]) -> bool:
     return False
 
 
+def crosscheck_output_claimed_as_verifier_pass(record: dict[str, Any]) -> bool:
+    for result in verifier_results(record):
+        status = str(result.get("status", "")).lower()
+        verdict = str(result.get("verdict", "")).lower()
+        conclusion = str(result.get("conclusion", "")).lower()
+        if not (
+            status in PASS_STATUSES
+            or verdict in PASS_STATUSES
+            or conclusion in PASS_STATUSES
+        ):
+            continue
+        text = "\n".join(string_values_and_keys(result)).lower()
+        if any(marker in text for marker in CROSSCHECK_SOURCE_MARKERS):
+            return True
+    return False
+
+
+def gate_results(record: dict[str, Any]) -> list[dict[str, Any]]:
+    results: list[dict[str, Any]] = []
+    for key in ("gate_result", "gate_results", "gatekeeper_result", "gatekeeper_results", "gates"):
+        value = record.get(key)
+        if isinstance(value, list):
+            results.extend(item for item in value if isinstance(item, dict))
+        elif isinstance(value, dict):
+            results.append(value)
+    return results
+
+
+def crosscheck_output_claimed_as_gate_pass(record: dict[str, Any]) -> bool:
+    for result in gate_results(record):
+        status = str(result.get("status", "")).lower()
+        verdict = str(result.get("verdict", "")).lower()
+        conclusion = str(result.get("conclusion", "")).lower()
+        if not (
+            status in PASS_STATUSES
+            or verdict in PASS_STATUSES
+            or conclusion in PASS_STATUSES
+        ):
+            continue
+        text = "\n".join(string_values_and_keys(result)).lower()
+        if any(marker in text for marker in CROSSCHECK_SOURCE_MARKERS):
+            return True
+    return False
+
+
 def checked_formalization_without_evidence(record: dict[str, Any]) -> bool:
     for formalization in as_list(record.get("formalizations")):
         if not isinstance(formalization, dict):
@@ -447,6 +554,24 @@ def check_research_loop_record(path: Path, record: dict[str, Any]) -> list[Polic
     return errors
 
 
+def crosscheck_record_has_forbidden_marker(record: dict[str, Any]) -> bool:
+    text = "\n".join(string_values_and_keys(record)).lower()
+    return any(marker in text for marker in OPERATOR_HANDOFF_FORBIDDEN_MARKERS)
+
+
+def check_crosscheck_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
+    errors: list[PolicyError] = []
+    if record.get("review_context_only") is not True:
+        errors.append(PolicyError(path, "cross-check report is not marked review_context_only"))
+    if has_true_operator_handoff_authority_field(record):
+        errors.append(PolicyError(path, "cross-check report claims accepted/review/promotion authority"))
+    if crosscheck_record_has_forbidden_marker(record):
+        errors.append(
+            PolicyError(path, "cross-check report contains private, secret, reasoning, or provider-payload marker")
+        )
+    return errors
+
+
 def check_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
     errors: list[PolicyError] = []
     status = str(record.get("status", "")).lower()
@@ -467,6 +592,10 @@ def check_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
             errors.append(
                 PolicyError(path, "workflow output is claimed as source metadata")
             )
+        if crosscheck_claimed_as_source_metadata(record):
+            errors.append(
+                PolicyError(path, "cross-check report is claimed as source metadata")
+            )
         if research_loop_claimed_as_accepted_proof(record):
             errors.append(
                 PolicyError(path, "research loop output is claimed as accepted proof")
@@ -474,6 +603,10 @@ def check_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
         if workflow_claimed_as_accepted_proof(record):
             errors.append(
                 PolicyError(path, "workflow output is claimed as accepted proof")
+            )
+        if crosscheck_claimed_as_accepted_authority(record):
+            errors.append(
+                PolicyError(path, "cross-check report is claimed as accepted theorem/refutation/status")
             )
         if nonhuman_output_claimed_as_human_review(record):
             errors.append(
@@ -486,6 +619,14 @@ def check_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
     if nonhuman_output_claimed_as_verifier_pass(record):
         errors.append(
             PolicyError(path, "operator or model output is claimed as verifier pass")
+        )
+    if crosscheck_output_claimed_as_verifier_pass(record):
+        errors.append(
+            PolicyError(path, "cross-check report is claimed as verifier pass")
+        )
+    if crosscheck_output_claimed_as_gate_pass(record):
+        errors.append(
+            PolicyError(path, "cross-check report is claimed as gate pass")
         )
     if checked_formalization_without_evidence(record):
         errors.append(PolicyError(path, "checked formalization lacks checker evidence"))
@@ -526,6 +667,14 @@ def check_repository(repo_root: Path) -> list[PolicyError]:
             errors.append(PolicyError(path, f"could not load YAML: {exc}"))
             continue
         errors.extend(check_research_loop_record(path, record))
+    crosscheck_review_root = repo_root / "reviews" / "crosscheck"
+    for path in iter_yaml_files(crosscheck_review_root):
+        try:
+            record = load_yaml(path)
+        except Exception as exc:  # pragma: no cover - surfaced through CLI
+            errors.append(PolicyError(path, f"could not load YAML: {exc}"))
+            continue
+        errors.extend(check_crosscheck_record(path, record))
     return errors
 
 
@@ -658,6 +807,61 @@ def bad_artifact(case: str) -> str:
             "reviewer_kind": "reviewable_workflow_packet",
             "notes": "This fixture tries to spoof human review with a workflow packet.",
         }
+    elif case == "crosscheck_as_source":
+        base["sources"] = [
+            {
+                "kind": "workflow_crosscheck_report",
+                "title": "Workflow cross-check report",
+                "authors": ["workspace operator"],
+                "year": 2026,
+                "url": ".cosheaf/workflows/wf.example/crosscheck.json",
+            }
+        ]
+    elif case == "crosscheck_as_accepted_proof":
+        base["type"] = "proof"
+        base["title"] = "Bad cross-check proof"
+        base["statement"] = "The workflow cross-check report is accepted proof and proves the theorem."
+        base["evidence"] = [
+            {
+                "kind": "workflow_crosscheck_report",
+                "path": ".cosheaf/workflows/wf.example/crosscheck.json",
+                "summary": "This tries to make a cross-check report proof authority.",
+            }
+        ]
+    elif case == "crosscheck_as_accepted_refutation":
+        base["type"] = "counterexample"
+        base["title"] = "Bad cross-check refutation"
+        base["statement"] = "The checker-crosscheck eval output is an accepted refutation."
+        base["evidence"] = [
+            {
+                "kind": "checker_crosscheck_eval",
+                "path": ".cosheaf/crosscheck-demo/eval.json",
+                "summary": "This tries to make eval output accepted refutation authority.",
+            }
+        ]
+    elif case == "crosscheck_as_human_review":
+        base["review"] = {
+            "state": "human_reviewed",
+            "review_source": ".cosheaf/workflows/wf.example/crosscheck.json",
+            "reviewer_kind": "workflow_crosscheck_report",
+            "notes": "This fixture tries to spoof human review with a cross-check report.",
+        }
+    elif case == "crosscheck_as_verifier_pass":
+        base["verifier_results"] = [
+            {
+                "status": "pass",
+                "tool": "workflow_crosscheck_report",
+                "path": ".cosheaf/workflows/wf.example/crosscheck.json",
+            }
+        ]
+    elif case == "crosscheck_as_gate_pass":
+        base["gate_results"] = [
+            {
+                "status": "pass",
+                "tool": "workflow_crosscheck_report",
+                "path": ".cosheaf/workflows/wf.example/crosscheck.json",
+            }
+        ]
     else:
         raise ValueError(case)
     base["id"] = f"definition.{case}"
@@ -732,6 +936,49 @@ def bad_research_loop_export(case: str) -> str:
     return yaml.safe_dump(base, sort_keys=False)
 
 
+def good_crosscheck_export() -> str:
+    return """\
+kind: workflow_crosscheck_report
+workflow_id: workflow.public.example
+review_context_only: true
+accepted_write_performed: false
+accepted_status_created: false
+accepted_refutation_created: false
+accepted_theorem_created: false
+checker_pass_is_accepted: false
+checked_pass_is_accepted: false
+gate_pass_created: false
+human_review_created: false
+promotion_performed: false
+source_metadata_created: false
+verifier_pass_created: false
+summary: Public-safe cross-check fixture for policy guard self-test.
+status_counts:
+  checked-pass: 1
+  unchecked: 1
+skipped_is_pass: false
+limitations:
+- Cross-check reports are review context only.
+"""
+
+
+def bad_crosscheck_export(case: str) -> str:
+    base = yaml.safe_load(good_crosscheck_export())
+    assert isinstance(base, dict)
+    if case == "crosscheck_private_marker":
+        base["referenced_files"] = ["kb/private/claims/claim.secret.yaml"]
+    elif case == "crosscheck_authority_true":
+        base["accepted_status_created"] = True
+    elif case == "crosscheck_provider_dump":
+        base["provider_response"] = {"raw": "provider response payload should not be imported"}
+    elif case == "crosscheck_missing_context_flag":
+        base.pop("review_context_only", None)
+    else:
+        raise ValueError(case)
+    base["workflow_id"] = f"workflow.{case}"
+    return yaml.safe_dump(base, sort_keys=False)
+
+
 def write_operator_handoff_fixture(root: Path, name: str, body: str) -> Path:
     path = root / "reviews" / "operator" / f"{name}.yaml"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -741,6 +988,13 @@ def write_operator_handoff_fixture(root: Path, name: str, body: str) -> Path:
 
 def write_research_loop_fixture(root: Path, name: str, body: str) -> Path:
     path = root / "reviews" / "research-loop" / f"{name}.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(body, encoding="utf-8")
+    return path
+
+
+def write_crosscheck_fixture(root: Path, name: str, body: str) -> Path:
+    path = root / "reviews" / "crosscheck" / f"{name}.yaml"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(body, encoding="utf-8")
     return path
@@ -765,15 +1019,26 @@ def run_self_test() -> int:
         "workflow_as_source": "workflow output is claimed as source metadata",
         "workflow_as_accepted_proof": "workflow output is claimed as accepted proof",
         "workflow_as_human_review": "operator, workflow, or model output is claimed as human review",
+        "crosscheck_as_source": "cross-check report is claimed as source metadata",
+        "crosscheck_as_accepted_proof": "cross-check report is claimed as accepted theorem/refutation/status",
+        "crosscheck_as_accepted_refutation": "cross-check report is claimed as accepted theorem/refutation/status",
+        "crosscheck_as_human_review": "operator, workflow, or model output is claimed as human review",
+        "crosscheck_as_verifier_pass": "cross-check report is claimed as verifier pass",
+        "crosscheck_as_gate_pass": "cross-check report is claimed as gate pass",
         "research_loop_private_marker": "research loop output contains private, secret, proof, source, reasoning, or provider-payload marker",
         "research_loop_authority_true": "research loop output claims accepted/review/promotion authority",
         "research_loop_provider_dump": "research loop output contains private, secret, proof, source, reasoning, or provider-payload marker",
+        "crosscheck_private_marker": "cross-check report contains private, secret, reasoning, or provider-payload marker",
+        "crosscheck_authority_true": "cross-check report claims accepted/review/promotion authority",
+        "crosscheck_provider_dump": "cross-check report contains private, secret, reasoning, or provider-payload marker",
+        "crosscheck_missing_context_flag": "cross-check report is not marked review_context_only",
     }
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         write_fixture(root, "definition.good", good_artifact())
         write_operator_handoff_fixture(root, "handoff.good", good_operator_handoff())
         write_research_loop_fixture(root, "loop.good", good_research_loop_export())
+        write_crosscheck_fixture(root, "crosscheck.good", good_crosscheck_export())
         positive_errors = check_repository(root)
         if positive_errors:
             print("positive fixture failed:", file=sys.stderr)
@@ -789,6 +1054,15 @@ def run_self_test() -> int:
                 "research_loop_as_accepted_proof",
             }:
                 write_research_loop_fixture(case_root, case, bad_research_loop_export(case))
+            elif case.startswith("crosscheck_") and case not in {
+                "crosscheck_as_source",
+                "crosscheck_as_accepted_proof",
+                "crosscheck_as_accepted_refutation",
+                "crosscheck_as_human_review",
+                "crosscheck_as_verifier_pass",
+                "crosscheck_as_gate_pass",
+            }:
+                write_crosscheck_fixture(case_root, case, bad_crosscheck_export(case))
             else:
                 write_fixture(case_root, case, bad_artifact(case))
             errors = check_repository(case_root)

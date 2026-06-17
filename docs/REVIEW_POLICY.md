@@ -100,6 +100,21 @@ Maintainer notes may mention where review context came from, but accepted
 public artifacts still need maintainer human review, source metadata,
 validation, gates, and normal promotion. See `docs/OPERATOR_POLICY.md`.
 
+## Cross-Check Report Review Boundary
+
+Workflow cross-check reports, workflow evidence reports, workflow gap reports,
+checker-run sidecars, and checker/cross-check eval outputs can help reviewers
+see checked, failed, skipped, inconclusive, unsourced, or unreviewed items.
+They are still review context only. They are not source metadata, accepted
+proof, accepted theorem/refutation, human review, verifier pass, gate pass,
+accepted status, or promotion authority.
+
+Reviewers should confirm that any included cross-check material is public-safe,
+clearly labeled review context only, independent from artifact-local source
+metadata and maintainer review records, and free of private workspace material,
+secrets, hidden reasoning, raw provider payloads, or authority claims. See
+`docs/CROSSCHECK_REPORT_POLICY.md`.
+
 ## Research Loop Review Boundary
 
 Research loop outputs can support public KB review by preserving attempted
