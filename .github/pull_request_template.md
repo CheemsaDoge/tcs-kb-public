@@ -32,6 +32,7 @@ Public KB policy checklist:
 - [ ] Any research-run records or review exports are public-safe provenance only and do not contain private material, secrets, hidden reasoning, or unreviewed provider dumps.
 - [ ] Any strategy plans or strategy review exports are public-safe review context only and are not presented as source metadata, verifier evidence, human review, accepted status, accepted refutation, gate pass, or promotion authority.
 - [ ] Any operator handoff records are public-safe review context only and are not presented as source metadata, human review, verifier evidence, accepted status, accepted refutation, gate pass, or promotion authority.
+- [ ] Any research-loop records are public-safe review context only and are not presented as source metadata, accepted proof, human review, verifier evidence, accepted status, accepted refutation, gate pass, or promotion authority.
 
 ## Interface Changes
 

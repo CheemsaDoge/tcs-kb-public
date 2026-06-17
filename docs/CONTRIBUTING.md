@@ -50,6 +50,12 @@ failure notes, unreviewed provider or agent failure dumps, secrets, or claims
 that a failure log proves, refutes, verifies, reviews, accepts, or promotes an
 artifact. See `docs/FAILURE_LOG_POLICY.md`.
 
+Research loop outputs are public review context only. Do not use them as
+source metadata, accepted proof, human review, verifier pass, gate pass,
+accepted status, accepted refutation, or promotion authority. Do not copy
+private loop material, provider dumps, hidden reasoning, or secrets into this
+repository. See `docs/RESEARCH_LOOP_POLICY.md`.
+
 ## PR Scope
 
 One issue should normally become one branch and one PR. Avoid mass imports.

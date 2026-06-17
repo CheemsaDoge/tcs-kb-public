@@ -91,6 +91,19 @@ agent output.
 
 See `docs/OPERATOR_POLICY.md`.
 
+## Research Loop Outputs
+
+Research loop outputs may be included only as public review context. They are
+not source metadata, accepted proof, human review, verifier pass, gate pass,
+accepted status, accepted refutation, or promotion authority.
+
+Accepted public artifacts still require complete artifact-local source
+metadata, validation, gate results, and maintainer human review. Validation and
+gate success are not human review, and loop success never means accepted
+knowledge.
+
+See `docs/RESEARCH_LOOP_POLICY.md`.
+
 ## Promotion
 
 Draft artifacts may be promoted only after complete source metadata,

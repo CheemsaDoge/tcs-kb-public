@@ -65,6 +65,12 @@ outputs are review context only. They cannot create human review, verifier
 pass, accepted status, accepted refutation, or promotion authority. See
 `docs/OPERATOR_POLICY.md` and `docs/OPERATOR_HANDOFF_POLICY.md`.
 
+Research loop outputs are public review context only. They are not source
+metadata, not accepted proof, not human review, not verifier or gate passes,
+and not promotion authority. Accepted public artifacts still require complete
+source metadata and maintainer human review. Validation and gate success are
+not human review. See `docs/RESEARCH_LOOP_POLICY.md`.
+
 The repository includes `formal-libs/lean-libraries.example.yaml` so existing
 planned CSLib formal-link metadata resolves under the G10 formal-link gate.
 That manifest is placeholder metadata only. It does not fetch CSLib, run Lean,
