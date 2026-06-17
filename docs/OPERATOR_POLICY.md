@@ -6,7 +6,7 @@ outputs changes the accepted knowledge boundary.
 
 ## Authority Boundary
 
-Operator and MCP outputs are not:
+Operator, MCP, and reviewable-workflow outputs are not:
 
 - human review;
 - source metadata;
@@ -49,9 +49,16 @@ Do not use operator, Codex, MCP, provider, LLM, or agent output to:
 - move draft or review-context material into `kb/public/accepted/`;
 - justify accepted promotion without maintainer review.
 
+Reviewable-workflow packets have the same authority boundary. A workflow
+packet may help a maintainer inspect commands, readiness classification, draft
+proposal context, or handoff context, but it must not be recorded as source
+metadata, accepted proof, human review, verifier evidence, gate evidence,
+accepted status, accepted refutation, or promotion authority.
+
 The public KB policy guard rejects accepted artifacts that structurally claim
-operator/model output as human review and rejects verifier-pass records that
-structurally identify operator/model output as the checker authority.
+operator, workflow, or model output as human review and rejects verifier-pass
+records that structurally identify operator/model output as the checker
+authority.
 
 ## Downstream Workspace Boundary
 

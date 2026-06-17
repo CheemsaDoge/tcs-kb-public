@@ -477,7 +477,7 @@ def check_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
             )
         if nonhuman_output_claimed_as_human_review(record):
             errors.append(
-                PolicyError(path, "operator or model output is claimed as human review")
+                PolicyError(path, "operator, workflow, or model output is claimed as human review")
             )
     if has_private_dependency(record):
         errors.append(PolicyError(path, "public artifact depends on a private artifact"))
@@ -651,6 +651,13 @@ def bad_artifact(case: str) -> str:
                 "summary": "This tries to make workflow output proof authority.",
             }
         ]
+    elif case == "workflow_as_human_review":
+        base["review"] = {
+            "state": "human_reviewed",
+            "review_source": ".cosheaf/workflows/wf.example/handoff.json",
+            "reviewer_kind": "reviewable_workflow_packet",
+            "notes": "This fixture tries to spoof human review with a workflow packet.",
+        }
     else:
         raise ValueError(case)
     base["id"] = f"definition.{case}"
@@ -745,7 +752,7 @@ def run_self_test() -> int:
         "missing_human_review": "missing human review metadata",
         "private_dependency": "depends on a private artifact",
         "skipped_as_pass": "skipped verifier result is treated as pass",
-        "operator_as_human_review": "operator or model output is claimed as human review",
+        "operator_as_human_review": "operator, workflow, or model output is claimed as human review",
         "operator_as_verifier_pass": "operator or model output is claimed as verifier pass",
         "checked_without_evidence": "checked formalization lacks checker evidence",
         "private_marker": "private-looking marker",
@@ -757,6 +764,7 @@ def run_self_test() -> int:
         "research_loop_as_accepted_proof": "research loop output is claimed as accepted proof",
         "workflow_as_source": "workflow output is claimed as source metadata",
         "workflow_as_accepted_proof": "workflow output is claimed as accepted proof",
+        "workflow_as_human_review": "operator, workflow, or model output is claimed as human review",
         "research_loop_private_marker": "research loop output contains private, secret, proof, source, reasoning, or provider-payload marker",
         "research_loop_authority_true": "research loop output claims accepted/review/promotion authority",
         "research_loop_provider_dump": "research loop output contains private, secret, proof, source, reasoning, or provider-payload marker",
