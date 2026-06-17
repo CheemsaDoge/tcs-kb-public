@@ -66,6 +66,12 @@ human review, verifier pass, gate pass, accepted status, accepted refutation,
 or promotion authority. See `docs/OPERATOR_POLICY.md` and
 `docs/OPERATOR_HANDOFF_POLICY.md`.
 
+Workflow cross-check reports, evidence reports, gap reports, checker sidecars,
+and checker/cross-check eval outputs are also review context only. They cannot
+be accepted proof, accepted theorem/refutation, source metadata, human review,
+verifier pass, gate pass, accepted status, or promotion authority. See
+`docs/CROSSCHECK_REPORT_POLICY.md`.
+
 Research loop outputs are public review context only. They are not source
 metadata, not accepted proof, not human review, not verifier or gate passes,
 and not promotion authority. Accepted public artifacts still require complete
