@@ -18,6 +18,7 @@ The guard checks public KB YAML records for:
   metadata;
 - workflow records structurally claimed as accepted artifact source metadata or
   accepted proof;
+- workflow packets structurally claimed as human review;
 - operator handoff exports under `reviews/operator/` that contain private
   paths, secrets, hidden reasoning, raw provider payload markers, or authority
   fields set to true;
