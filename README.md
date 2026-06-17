@@ -60,10 +60,11 @@ cannot replace source metadata, validation, gates, verifier evidence, human
 review, or accepted promotion, and private workspace strategy plans must not be
 copied into this public KB. See `docs/STRATEGY_PLAN_POLICY.md`.
 
-Operator, Codex, MCP, provider, research-run, checked-evidence, and strategy
-outputs are review context only. They cannot create human review, verifier
-pass, accepted status, accepted refutation, or promotion authority. See
-`docs/OPERATOR_POLICY.md` and `docs/OPERATOR_HANDOFF_POLICY.md`.
+Operator, Codex, MCP, provider, workflow, research-run, checked-evidence, and
+strategy outputs are review context only. They cannot create source metadata,
+human review, verifier pass, gate pass, accepted status, accepted refutation,
+or promotion authority. See `docs/OPERATOR_POLICY.md` and
+`docs/OPERATOR_HANDOFF_POLICY.md`.
 
 Research loop outputs are public review context only. They are not source
 metadata, not accepted proof, not human review, not verifier or gate passes,
@@ -91,7 +92,7 @@ cosheaf gate run
 cosheaf gate run --pr-checklist .github/pull_request_template.md
 ```
 
-Repository CI installs `tcs-cosheaf` from the published `v0.7.0` framework tag.
+Repository CI installs `tcs-cosheaf` from the published `v0.9.0` framework tag.
 
 Downstream workspaces should include this repository as a readonly public KB
 root and keep private work in a separate writable root. The workspace template

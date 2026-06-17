@@ -87,12 +87,14 @@ private workspace material, unreviewed provider dumps, secrets, hidden
 reasoning, `.env` content, or full private KB text. Accepted public artifacts
 must not depend on research-run records as a substitute for source metadata.
 
-## Operator And MCP Review Boundary
+## Workflow, Operator, And MCP Review Boundary
 
-Operator, Codex, MCP, provider, LLM, and agent outputs can support a public KB
-review by recording commands, proposed drafts, bounded context, checked
-evidence, or strategy notes. They are not human review and must not be recorded
-as human reviewers in structured review fields.
+Workflow, operator, Codex, MCP, provider, LLM, and agent outputs can support a
+public KB review by recording commands, proposed drafts, bounded context,
+checked evidence, or strategy notes. They are not source metadata, human
+review, verifier pass, gate pass, accepted status, accepted refutation, or
+promotion authority, and must not be recorded as human reviewers in structured
+review fields.
 
 Maintainer notes may mention where review context came from, but accepted
 public artifacts still need maintainer human review, source metadata,
