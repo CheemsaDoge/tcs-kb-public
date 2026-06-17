@@ -42,6 +42,7 @@ NON_HUMAN_AUTHORITY_MARKERS = (
     "model",
     "operator",
     "provider",
+    "workflow",
 )
 OPERATOR_HANDOFF_SOURCE_MARKERS = (
     "operator handoff",
@@ -58,6 +59,14 @@ RESEARCH_LOOP_SOURCE_MARKERS = (
     "research-loop",
     "research_loop",
     "retry_justification",
+)
+WORKFLOW_SOURCE_MARKERS = (
+    ".cosheaf/workflows",
+    "research workflow",
+    "reviewable workflow",
+    "workflow output",
+    "workflow record",
+    "workflow_output",
 )
 OPERATOR_HANDOFF_FORBIDDEN_MARKERS = (
     ".env",
@@ -231,6 +240,19 @@ def research_loop_claimed_as_source_metadata(record: dict[str, Any]) -> bool:
     return False
 
 
+def workflow_claimed_as_source_metadata(record: dict[str, Any]) -> bool:
+    sources = record.get("sources")
+    if not isinstance(sources, list):
+        return False
+    for source in sources:
+        if not isinstance(source, dict):
+            continue
+        text = "\n".join(string_values_and_keys(source)).lower()
+        if any(marker in text for marker in WORKFLOW_SOURCE_MARKERS):
+            return True
+    return False
+
+
 def research_loop_claimed_as_accepted_proof(record: dict[str, Any]) -> bool:
     status = str(record.get("status", "")).lower()
     artifact_type = str(record.get("type", "")).lower()
@@ -238,6 +260,20 @@ def research_loop_claimed_as_accepted_proof(record: dict[str, Any]) -> bool:
         return False
     text = "\n".join(string_values_and_keys(record)).lower()
     return any(marker in text for marker in RESEARCH_LOOP_SOURCE_MARKERS) and (
+        "accepted proof" in text
+        or "accepted_proof" in text
+        or "proof authority" in text
+        or "proves the theorem" in text
+    )
+
+
+def workflow_claimed_as_accepted_proof(record: dict[str, Any]) -> bool:
+    status = str(record.get("status", "")).lower()
+    artifact_type = str(record.get("type", "")).lower()
+    if status != "accepted" or artifact_type not in {"proof", "proof-sketch", "theorem"}:
+        return False
+    text = "\n".join(string_values_and_keys(record)).lower()
+    return any(marker in text for marker in WORKFLOW_SOURCE_MARKERS) and (
         "accepted proof" in text
         or "accepted_proof" in text
         or "proof authority" in text
@@ -427,9 +463,17 @@ def check_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
             errors.append(
                 PolicyError(path, "research loop output is claimed as source metadata")
             )
+        if workflow_claimed_as_source_metadata(record):
+            errors.append(
+                PolicyError(path, "workflow output is claimed as source metadata")
+            )
         if research_loop_claimed_as_accepted_proof(record):
             errors.append(
                 PolicyError(path, "research loop output is claimed as accepted proof")
+            )
+        if workflow_claimed_as_accepted_proof(record):
+            errors.append(
+                PolicyError(path, "workflow output is claimed as accepted proof")
             )
         if nonhuman_output_claimed_as_human_review(record):
             errors.append(
@@ -586,6 +630,27 @@ def bad_artifact(case: str) -> str:
                 "summary": "This tries to make research-loop output proof authority.",
             }
         ]
+    elif case == "workflow_as_source":
+        base["sources"] = [
+            {
+                "kind": "workflow_output",
+                "title": "Reviewable workflow record",
+                "authors": ["workspace operator"],
+                "year": 2026,
+                "url": ".cosheaf/workflows/wf.example/workflow.json",
+            }
+        ]
+    elif case == "workflow_as_accepted_proof":
+        base["type"] = "proof"
+        base["title"] = "Bad workflow proof"
+        base["statement"] = "The workflow output is accepted proof and proves the theorem."
+        base["evidence"] = [
+            {
+                "kind": "workflow_output",
+                "path": ".cosheaf/workflows/wf.example/workflow.json",
+                "summary": "This tries to make workflow output proof authority.",
+            }
+        ]
     else:
         raise ValueError(case)
     base["id"] = f"definition.{case}"
@@ -690,6 +755,8 @@ def run_self_test() -> int:
         "operator_handoff_provider_dump": "operator handoff contains private, secret, reasoning, or provider-payload marker",
         "research_loop_as_source": "research loop output is claimed as source metadata",
         "research_loop_as_accepted_proof": "research loop output is claimed as accepted proof",
+        "workflow_as_source": "workflow output is claimed as source metadata",
+        "workflow_as_accepted_proof": "workflow output is claimed as accepted proof",
         "research_loop_private_marker": "research loop output contains private, secret, proof, source, reasoning, or provider-payload marker",
         "research_loop_authority_true": "research loop output claims accepted/review/promotion authority",
         "research_loop_provider_dump": "research loop output contains private, secret, proof, source, reasoning, or provider-payload marker",
