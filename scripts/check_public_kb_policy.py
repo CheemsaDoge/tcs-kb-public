@@ -50,6 +50,15 @@ OPERATOR_HANDOFF_SOURCE_MARKERS = (
     "operator session",
     "reviews/operator",
 )
+RESEARCH_LOOP_SOURCE_MARKERS = (
+    ".cosheaf/research-loops",
+    "attempt memory",
+    "attempt-memory",
+    "research loop",
+    "research-loop",
+    "research_loop",
+    "retry_justification",
+)
 OPERATOR_HANDOFF_FORBIDDEN_MARKERS = (
     ".env",
     "api key",
@@ -72,11 +81,23 @@ OPERATOR_HANDOFF_FORBIDDEN_MARKERS = (
     "\\private\\",
     "/private/",
 )
+RESEARCH_LOOP_FORBIDDEN_MARKERS = OPERATOR_HANDOFF_FORBIDDEN_MARKERS + (
+    "accepted proof",
+    "accepted_proof",
+    "source metadata created",
+    "source_metadata_created",
+)
 OPERATOR_HANDOFF_FALSE_AUTHORITY_KEYS = (
+    "accepted_proof_created",
+    "accepted_status_claimed",
     "accepted_write_performed",
+    "gate_result_mutated",
+    "gate_pass_created",
     "human_review_created",
     "promotion_performed",
+    "source_metadata_created",
     "verifier_result_mutated",
+    "verifier_pass_created",
 )
 REVIEW_AUTHORITY_KEYS = (
     "actor_kind",
@@ -195,6 +216,33 @@ def operator_handoff_claimed_as_source_metadata(record: dict[str, Any]) -> bool:
         if any(marker in text for marker in OPERATOR_HANDOFF_SOURCE_MARKERS):
             return True
     return False
+
+
+def research_loop_claimed_as_source_metadata(record: dict[str, Any]) -> bool:
+    sources = record.get("sources")
+    if not isinstance(sources, list):
+        return False
+    for source in sources:
+        if not isinstance(source, dict):
+            continue
+        text = "\n".join(string_values_and_keys(source)).lower()
+        if any(marker in text for marker in RESEARCH_LOOP_SOURCE_MARKERS):
+            return True
+    return False
+
+
+def research_loop_claimed_as_accepted_proof(record: dict[str, Any]) -> bool:
+    status = str(record.get("status", "")).lower()
+    artifact_type = str(record.get("type", "")).lower()
+    if status != "accepted" or artifact_type not in {"proof", "proof-sketch", "theorem"}:
+        return False
+    text = "\n".join(string_values_and_keys(record)).lower()
+    return any(marker in text for marker in RESEARCH_LOOP_SOURCE_MARKERS) and (
+        "accepted proof" in text
+        or "accepted_proof" in text
+        or "proof authority" in text
+        or "proves the theorem" in text
+    )
 
 
 def has_human_review(record: dict[str, Any]) -> bool:
@@ -345,6 +393,24 @@ def check_operator_handoff_record(path: Path, record: dict[str, Any]) -> list[Po
     return errors
 
 
+def research_loop_has_forbidden_marker(record: dict[str, Any]) -> bool:
+    text = "\n".join(string_values_and_keys(record)).lower()
+    return any(marker in text for marker in RESEARCH_LOOP_FORBIDDEN_MARKERS)
+
+
+def check_research_loop_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
+    errors: list[PolicyError] = []
+    if record.get("review_context_only") is not True:
+        errors.append(PolicyError(path, "research loop output is not marked review_context_only"))
+    if has_true_operator_handoff_authority_field(record):
+        errors.append(PolicyError(path, "research loop output claims accepted/review/promotion authority"))
+    if research_loop_has_forbidden_marker(record):
+        errors.append(
+            PolicyError(path, "research loop output contains private, secret, proof, source, reasoning, or provider-payload marker")
+        )
+    return errors
+
+
 def check_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
     errors: list[PolicyError] = []
     status = str(record.get("status", "")).lower()
@@ -356,6 +422,14 @@ def check_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
         if operator_handoff_claimed_as_source_metadata(record):
             errors.append(
                 PolicyError(path, "operator handoff is claimed as source metadata")
+            )
+        if research_loop_claimed_as_source_metadata(record):
+            errors.append(
+                PolicyError(path, "research loop output is claimed as source metadata")
+            )
+        if research_loop_claimed_as_accepted_proof(record):
+            errors.append(
+                PolicyError(path, "research loop output is claimed as accepted proof")
             )
         if nonhuman_output_claimed_as_human_review(record):
             errors.append(
@@ -400,6 +474,14 @@ def check_repository(repo_root: Path) -> list[PolicyError]:
             errors.append(PolicyError(path, f"could not load YAML: {exc}"))
             continue
         errors.extend(check_operator_handoff_record(path, record))
+    research_loop_review_root = repo_root / "reviews" / "research-loop"
+    for path in iter_yaml_files(research_loop_review_root):
+        try:
+            record = load_yaml(path)
+        except Exception as exc:  # pragma: no cover - surfaced through CLI
+            errors.append(PolicyError(path, f"could not load YAML: {exc}"))
+            continue
+        errors.extend(check_research_loop_record(path, record))
     return errors
 
 
@@ -483,6 +565,27 @@ def bad_artifact(case: str) -> str:
                 "url": "reviews/operator/handoff.example.yaml",
             }
         ]
+    elif case == "research_loop_as_source":
+        base["sources"] = [
+            {
+                "kind": "research_loop",
+                "title": "Research loop review context",
+                "authors": ["workspace operator"],
+                "year": 2026,
+                "url": "reviews/research-loop/loop.example.yaml",
+            }
+        ]
+    elif case == "research_loop_as_accepted_proof":
+        base["type"] = "proof"
+        base["title"] = "Bad research-loop proof"
+        base["statement"] = "The research loop output is accepted proof and proves the theorem."
+        base["evidence"] = [
+            {
+                "kind": "research_loop",
+                "path": "reviews/research-loop/loop.example.yaml",
+                "summary": "This tries to make research-loop output proof authority.",
+            }
+        ]
     else:
         raise ValueError(case)
     base["id"] = f"definition.{case}"
@@ -524,8 +627,48 @@ def bad_operator_handoff(case: str) -> str:
     return yaml.safe_dump(base, sort_keys=False)
 
 
+def good_research_loop_export() -> str:
+    return """\
+kind: research_loop_export
+loop_id: loop.public.example
+review_context_only: true
+accepted_write_performed: false
+human_review_created: false
+promotion_performed: false
+verifier_result_mutated: false
+summary: Public-safe research-loop fixture for policy guard self-test.
+attempts:
+- status: failed
+  summary: Failed attempt is retained as review context only.
+- status: succeeded
+  summary: Succeeded loop attempt is not accepted knowledge.
+"""
+
+
+def bad_research_loop_export(case: str) -> str:
+    base = yaml.safe_load(good_research_loop_export())
+    assert isinstance(base, dict)
+    if case == "research_loop_private_marker":
+        base["referenced_files"] = ["kb/private/claims/claim.secret.yaml"]
+    elif case == "research_loop_authority_true":
+        base["accepted_write_performed"] = True
+    elif case == "research_loop_provider_dump":
+        base["provider_response"] = {"raw": "provider response payload should not be imported"}
+    else:
+        raise ValueError(case)
+    base["loop_id"] = f"loop.{case}"
+    return yaml.safe_dump(base, sort_keys=False)
+
+
 def write_operator_handoff_fixture(root: Path, name: str, body: str) -> Path:
     path = root / "reviews" / "operator" / f"{name}.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(body, encoding="utf-8")
+    return path
+
+
+def write_research_loop_fixture(root: Path, name: str, body: str) -> Path:
+    path = root / "reviews" / "research-loop" / f"{name}.yaml"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(body, encoding="utf-8")
     return path
@@ -545,11 +688,17 @@ def run_self_test() -> int:
         "operator_handoff_private_marker": "operator handoff contains private, secret, reasoning, or provider-payload marker",
         "operator_handoff_authority_true": "operator handoff claims accepted/review/promotion authority",
         "operator_handoff_provider_dump": "operator handoff contains private, secret, reasoning, or provider-payload marker",
+        "research_loop_as_source": "research loop output is claimed as source metadata",
+        "research_loop_as_accepted_proof": "research loop output is claimed as accepted proof",
+        "research_loop_private_marker": "research loop output contains private, secret, proof, source, reasoning, or provider-payload marker",
+        "research_loop_authority_true": "research loop output claims accepted/review/promotion authority",
+        "research_loop_provider_dump": "research loop output contains private, secret, proof, source, reasoning, or provider-payload marker",
     }
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         write_fixture(root, "definition.good", good_artifact())
         write_operator_handoff_fixture(root, "handoff.good", good_operator_handoff())
+        write_research_loop_fixture(root, "loop.good", good_research_loop_export())
         positive_errors = check_repository(root)
         if positive_errors:
             print("positive fixture failed:", file=sys.stderr)
@@ -560,6 +709,11 @@ def run_self_test() -> int:
             case_root = root / case
             if case.startswith("operator_handoff_") and case != "operator_handoff_as_source":
                 write_operator_handoff_fixture(case_root, case, bad_operator_handoff(case))
+            elif case.startswith("research_loop_") and case not in {
+                "research_loop_as_source",
+                "research_loop_as_accepted_proof",
+            }:
+                write_research_loop_fixture(case_root, case, bad_research_loop_export(case))
             else:
                 write_fixture(case_root, case, bad_artifact(case))
             errors = check_repository(case_root)

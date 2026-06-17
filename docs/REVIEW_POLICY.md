@@ -97,3 +97,17 @@ as human reviewers in structured review fields.
 Maintainer notes may mention where review context came from, but accepted
 public artifacts still need maintainer human review, source metadata,
 validation, gates, and normal promotion. See `docs/OPERATOR_POLICY.md`.
+
+## Research Loop Review Boundary
+
+Research loop outputs can support public KB review by preserving attempted
+directions, failed directions, retry justifications, scanner findings, and
+bounded task/result packets. They are not source metadata, accepted proof,
+human review, verifier pass, gate pass, accepted status, accepted refutation,
+or promotion authority.
+
+Reviewers should confirm that any included loop material is public-safe,
+clearly labeled review context only, independent from artifact-local source
+metadata, and free of private workspace material, secrets, hidden reasoning,
+raw provider payloads, and authority claims. See
+`docs/RESEARCH_LOOP_POLICY.md`.
