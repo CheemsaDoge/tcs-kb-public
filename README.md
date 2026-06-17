@@ -91,7 +91,7 @@ cosheaf gate run
 cosheaf gate run --pr-checklist .github/pull_request_template.md
 ```
 
-Repository CI installs `tcs-cosheaf` from the published `v0.6.0` framework tag.
+Repository CI installs `tcs-cosheaf` from the published `v0.7.0` framework tag.
 
 Downstream workspaces should include this repository as a readonly public KB
 root and keep private work in a separate writable root. The workspace template
