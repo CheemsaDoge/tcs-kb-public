@@ -1,8 +1,8 @@
 # Operator And MCP Policy
 
 This repository may use operator, Codex, MCP, provider, research-run, checked
-evidence, or strategy-plan outputs as public review context. None of those
-outputs changes the accepted knowledge boundary.
+evidence, strategy-plan, workflow, cross-check, or campaign outputs as public
+review context. None of those outputs changes the accepted knowledge boundary.
 
 ## Authority Boundary
 
@@ -62,10 +62,18 @@ inconclusive, unsourced, or unreviewed items, but they must not be recorded as
 source metadata, accepted proof, accepted theorem/refutation, human review,
 verifier pass, gate pass, accepted status, or promotion authority.
 
+Campaign handoffs, campaign eval reports, scorecards, attempts, and
+`operator_task_v2` packets have the same review context boundary. They may
+help maintainers inspect repeated attempt history, budget-stop behavior, gaps,
+and draft proposals, but they must not be recorded as source metadata, accepted
+proof, accepted theorem/refutation, human review, verifier pass, gate pass,
+accepted status, or promotion authority.
+
 The public KB policy guard rejects accepted artifacts that structurally claim
 operator, workflow, or model output as human review and rejects verifier-pass
 records that structurally identify operator/model output as the checker
-authority. It also rejects common cross-check report authority spoofing.
+authority. It also rejects common cross-check and campaign output authority
+spoofing.
 
 ## Downstream Workspace Boundary
 

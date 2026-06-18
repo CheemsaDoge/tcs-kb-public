@@ -72,6 +72,12 @@ be accepted proof, accepted theorem/refutation, source metadata, human review,
 verifier pass, gate pass, accepted status, or promotion authority. See
 `docs/CROSSCHECK_REPORT_POLICY.md`.
 
+Campaign handoffs, campaign eval reports, scorecards, attempts, and
+`operator_task_v2` packets are public review context only. They cannot create
+source metadata, human review, verifier pass, gate pass, accepted proof,
+accepted theorem/refutation, accepted status, or promotion authority. See
+`docs/CAMPAIGN_OUTPUT_POLICY.md`.
+
 Research loop outputs are public review context only. They are not source
 metadata, not accepted proof, not human review, not verifier or gate passes,
 and not promotion authority. Accepted public artifacts still require complete

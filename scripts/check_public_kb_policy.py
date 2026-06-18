@@ -43,6 +43,7 @@ NON_HUMAN_AUTHORITY_MARKERS = (
     "operator",
     "provider",
     "workflow",
+    "campaign",
 )
 OPERATOR_HANDOFF_SOURCE_MARKERS = (
     "operator handoff",
@@ -86,6 +87,21 @@ CROSSCHECK_SOURCE_MARKERS = (
     "workflow_crosscheck_report",
     "workflow_evidence_report",
     "workflow_gap_report",
+)
+CAMPAIGN_SOURCE_MARKERS = (
+    ".cosheaf/campaign-demo",
+    ".cosheaf/campaigns",
+    "campaign eval",
+    "campaign handoff",
+    "campaign output",
+    "campaign scorecard",
+    "campaign attempt",
+    "campaign_eval",
+    "campaign_handoff",
+    "campaign_output",
+    "campaign_scorecard",
+    "operator_task_v2",
+    "reviews/campaign",
 )
 OPERATOR_HANDOFF_FORBIDDEN_MARKERS = (
     ".env",
@@ -292,6 +308,19 @@ def crosscheck_claimed_as_source_metadata(record: dict[str, Any]) -> bool:
     return False
 
 
+def campaign_claimed_as_source_metadata(record: dict[str, Any]) -> bool:
+    sources = record.get("sources")
+    if not isinstance(sources, list):
+        return False
+    for source in sources:
+        if not isinstance(source, dict):
+            continue
+        text = "\n".join(string_values_and_keys(source)).lower()
+        if any(marker in text for marker in CAMPAIGN_SOURCE_MARKERS):
+            return True
+    return False
+
+
 def research_loop_claimed_as_accepted_proof(record: dict[str, Any]) -> bool:
     status = str(record.get("status", "")).lower()
     artifact_type = str(record.get("type", "")).lower()
@@ -325,6 +354,29 @@ def crosscheck_claimed_as_accepted_authority(record: dict[str, Any]) -> bool:
         return False
     text = "\n".join(string_values_and_keys(record)).lower()
     if not any(marker in text for marker in CROSSCHECK_SOURCE_MARKERS):
+        return False
+    authority_phrases = (
+        "accepted proof",
+        "accepted refutation",
+        "accepted status",
+        "accepted theorem",
+        "accepted_proof",
+        "accepted_refutation",
+        "accepted_status",
+        "accepted_theorem",
+        "proof authority",
+        "promotion authority",
+        "proves the theorem",
+        "refutes the theorem",
+    )
+    return any(phrase in text for phrase in authority_phrases)
+
+
+def campaign_claimed_as_accepted_authority(record: dict[str, Any]) -> bool:
+    if str(record.get("status", "")).lower() != "accepted":
+        return False
+    text = "\n".join(string_values_and_keys(record)).lower()
+    if not any(marker in text for marker in CAMPAIGN_SOURCE_MARKERS):
         return False
     authority_phrases = (
         "accepted proof",
@@ -449,6 +501,23 @@ def crosscheck_output_claimed_as_verifier_pass(record: dict[str, Any]) -> bool:
     return False
 
 
+def campaign_output_claimed_as_verifier_pass(record: dict[str, Any]) -> bool:
+    for result in verifier_results(record):
+        status = str(result.get("status", "")).lower()
+        verdict = str(result.get("verdict", "")).lower()
+        conclusion = str(result.get("conclusion", "")).lower()
+        if not (
+            status in PASS_STATUSES
+            or verdict in PASS_STATUSES
+            or conclusion in PASS_STATUSES
+        ):
+            continue
+        text = "\n".join(string_values_and_keys(result)).lower()
+        if any(marker in text for marker in CAMPAIGN_SOURCE_MARKERS):
+            return True
+    return False
+
+
 def gate_results(record: dict[str, Any]) -> list[dict[str, Any]]:
     results: list[dict[str, Any]] = []
     for key in ("gate_result", "gate_results", "gatekeeper_result", "gatekeeper_results", "gates"):
@@ -473,6 +542,23 @@ def crosscheck_output_claimed_as_gate_pass(record: dict[str, Any]) -> bool:
             continue
         text = "\n".join(string_values_and_keys(result)).lower()
         if any(marker in text for marker in CROSSCHECK_SOURCE_MARKERS):
+            return True
+    return False
+
+
+def campaign_output_claimed_as_gate_pass(record: dict[str, Any]) -> bool:
+    for result in gate_results(record):
+        status = str(result.get("status", "")).lower()
+        verdict = str(result.get("verdict", "")).lower()
+        conclusion = str(result.get("conclusion", "")).lower()
+        if not (
+            status in PASS_STATUSES
+            or verdict in PASS_STATUSES
+            or conclusion in PASS_STATUSES
+        ):
+            continue
+        text = "\n".join(string_values_and_keys(result)).lower()
+        if any(marker in text for marker in CAMPAIGN_SOURCE_MARKERS):
             return True
     return False
 
@@ -572,6 +658,24 @@ def check_crosscheck_record(path: Path, record: dict[str, Any]) -> list[PolicyEr
     return errors
 
 
+def campaign_record_has_forbidden_marker(record: dict[str, Any]) -> bool:
+    text = "\n".join(string_values_and_keys(record)).lower()
+    return any(marker in text for marker in OPERATOR_HANDOFF_FORBIDDEN_MARKERS)
+
+
+def check_campaign_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
+    errors: list[PolicyError] = []
+    if record.get("review_context_only") is not True:
+        errors.append(PolicyError(path, "campaign output is not marked review_context_only"))
+    if has_true_operator_handoff_authority_field(record):
+        errors.append(PolicyError(path, "campaign output claims accepted/review/promotion authority"))
+    if campaign_record_has_forbidden_marker(record):
+        errors.append(
+            PolicyError(path, "campaign output contains private, secret, reasoning, or provider-payload marker")
+        )
+    return errors
+
+
 def check_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
     errors: list[PolicyError] = []
     status = str(record.get("status", "")).lower()
@@ -596,6 +700,10 @@ def check_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
             errors.append(
                 PolicyError(path, "cross-check report is claimed as source metadata")
             )
+        if campaign_claimed_as_source_metadata(record):
+            errors.append(
+                PolicyError(path, "campaign output is claimed as source metadata")
+            )
         if research_loop_claimed_as_accepted_proof(record):
             errors.append(
                 PolicyError(path, "research loop output is claimed as accepted proof")
@@ -607,6 +715,10 @@ def check_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
         if crosscheck_claimed_as_accepted_authority(record):
             errors.append(
                 PolicyError(path, "cross-check report is claimed as accepted theorem/refutation/status")
+            )
+        if campaign_claimed_as_accepted_authority(record):
+            errors.append(
+                PolicyError(path, "campaign output is claimed as accepted theorem/refutation/status")
             )
         if nonhuman_output_claimed_as_human_review(record):
             errors.append(
@@ -624,9 +736,17 @@ def check_record(path: Path, record: dict[str, Any]) -> list[PolicyError]:
         errors.append(
             PolicyError(path, "cross-check report is claimed as verifier pass")
         )
+    if campaign_output_claimed_as_verifier_pass(record):
+        errors.append(
+            PolicyError(path, "campaign output is claimed as verifier pass")
+        )
     if crosscheck_output_claimed_as_gate_pass(record):
         errors.append(
             PolicyError(path, "cross-check report is claimed as gate pass")
+        )
+    if campaign_output_claimed_as_gate_pass(record):
+        errors.append(
+            PolicyError(path, "campaign output is claimed as gate pass")
         )
     if checked_formalization_without_evidence(record):
         errors.append(PolicyError(path, "checked formalization lacks checker evidence"))
@@ -675,6 +795,14 @@ def check_repository(repo_root: Path) -> list[PolicyError]:
             errors.append(PolicyError(path, f"could not load YAML: {exc}"))
             continue
         errors.extend(check_crosscheck_record(path, record))
+    campaign_review_root = repo_root / "reviews" / "campaign"
+    for path in iter_yaml_files(campaign_review_root):
+        try:
+            record = load_yaml(path)
+        except Exception as exc:  # pragma: no cover - surfaced through CLI
+            errors.append(PolicyError(path, f"could not load YAML: {exc}"))
+            continue
+        errors.extend(check_campaign_record(path, record))
     return errors
 
 
@@ -862,6 +990,61 @@ def bad_artifact(case: str) -> str:
                 "path": ".cosheaf/workflows/wf.example/crosscheck.json",
             }
         ]
+    elif case == "campaign_as_source":
+        base["sources"] = [
+            {
+                "kind": "campaign_handoff",
+                "title": "Campaign handoff review context",
+                "authors": ["workspace operator"],
+                "year": 2026,
+                "url": ".cosheaf/campaigns/campaign.example/handoff.json",
+            }
+        ]
+    elif case == "campaign_as_accepted_proof":
+        base["type"] = "proof"
+        base["title"] = "Bad campaign proof"
+        base["statement"] = "The campaign output is accepted proof and proves the theorem."
+        base["evidence"] = [
+            {
+                "kind": "campaign_handoff",
+                "path": ".cosheaf/campaigns/campaign.example/handoff.json",
+                "summary": "This tries to make campaign output proof authority.",
+            }
+        ]
+    elif case == "campaign_as_accepted_refutation":
+        base["type"] = "counterexample"
+        base["title"] = "Bad campaign refutation"
+        base["statement"] = "The campaign eval output is an accepted refutation."
+        base["evidence"] = [
+            {
+                "kind": "campaign_eval",
+                "path": ".cosheaf/campaign-demo/eval.json",
+                "summary": "This tries to make campaign eval output refutation authority.",
+            }
+        ]
+    elif case == "campaign_as_human_review":
+        base["review"] = {
+            "state": "human_reviewed",
+            "review_source": ".cosheaf/campaigns/campaign.example/handoff.json",
+            "reviewer_kind": "campaign_handoff",
+            "notes": "This fixture tries to spoof human review with a campaign handoff.",
+        }
+    elif case == "campaign_as_verifier_pass":
+        base["verifier_results"] = [
+            {
+                "status": "pass",
+                "tool": "campaign_eval",
+                "path": ".cosheaf/campaign-demo/eval.json",
+            }
+        ]
+    elif case == "campaign_as_gate_pass":
+        base["gate_results"] = [
+            {
+                "status": "pass",
+                "tool": "campaign_handoff",
+                "path": ".cosheaf/campaigns/campaign.example/handoff.json",
+            }
+        ]
     else:
         raise ValueError(case)
     base["id"] = f"definition.{case}"
@@ -979,6 +1162,43 @@ def bad_crosscheck_export(case: str) -> str:
     return yaml.safe_dump(base, sort_keys=False)
 
 
+def good_campaign_export() -> str:
+    return """\
+kind: campaign_handoff
+campaign_id: campaign.public.example
+review_context_only: true
+accepted_write_performed: false
+accepted_status_created: false
+accepted_refutation_created: false
+accepted_theorem_created: false
+gate_pass_created: false
+human_review_created: false
+promotion_performed: false
+source_metadata_created: false
+verifier_pass_created: false
+summary: Public-safe campaign fixture for policy guard self-test.
+limitations:
+- Campaign outputs are review context only.
+"""
+
+
+def bad_campaign_export(case: str) -> str:
+    base = yaml.safe_load(good_campaign_export())
+    assert isinstance(base, dict)
+    if case == "campaign_private_marker":
+        base["referenced_files"] = ["kb/private/claims/claim.secret.yaml"]
+    elif case == "campaign_authority_true":
+        base["accepted_refutation_created"] = True
+    elif case == "campaign_provider_dump":
+        base["provider_response"] = {"raw": "provider response payload should not be imported"}
+    elif case == "campaign_missing_context_flag":
+        base.pop("review_context_only", None)
+    else:
+        raise ValueError(case)
+    base["campaign_id"] = f"campaign.{case}"
+    return yaml.safe_dump(base, sort_keys=False)
+
+
 def write_operator_handoff_fixture(root: Path, name: str, body: str) -> Path:
     path = root / "reviews" / "operator" / f"{name}.yaml"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -995,6 +1215,13 @@ def write_research_loop_fixture(root: Path, name: str, body: str) -> Path:
 
 def write_crosscheck_fixture(root: Path, name: str, body: str) -> Path:
     path = root / "reviews" / "crosscheck" / f"{name}.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(body, encoding="utf-8")
+    return path
+
+
+def write_campaign_fixture(root: Path, name: str, body: str) -> Path:
+    path = root / "reviews" / "campaign" / f"{name}.yaml"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(body, encoding="utf-8")
     return path
@@ -1025,6 +1252,12 @@ def run_self_test() -> int:
         "crosscheck_as_human_review": "operator, workflow, or model output is claimed as human review",
         "crosscheck_as_verifier_pass": "cross-check report is claimed as verifier pass",
         "crosscheck_as_gate_pass": "cross-check report is claimed as gate pass",
+        "campaign_as_source": "campaign output is claimed as source metadata",
+        "campaign_as_accepted_proof": "campaign output is claimed as accepted theorem/refutation/status",
+        "campaign_as_accepted_refutation": "campaign output is claimed as accepted theorem/refutation/status",
+        "campaign_as_human_review": "operator, workflow, or model output is claimed as human review",
+        "campaign_as_verifier_pass": "campaign output is claimed as verifier pass",
+        "campaign_as_gate_pass": "campaign output is claimed as gate pass",
         "research_loop_private_marker": "research loop output contains private, secret, proof, source, reasoning, or provider-payload marker",
         "research_loop_authority_true": "research loop output claims accepted/review/promotion authority",
         "research_loop_provider_dump": "research loop output contains private, secret, proof, source, reasoning, or provider-payload marker",
@@ -1032,6 +1265,10 @@ def run_self_test() -> int:
         "crosscheck_authority_true": "cross-check report claims accepted/review/promotion authority",
         "crosscheck_provider_dump": "cross-check report contains private, secret, reasoning, or provider-payload marker",
         "crosscheck_missing_context_flag": "cross-check report is not marked review_context_only",
+        "campaign_private_marker": "campaign output contains private, secret, reasoning, or provider-payload marker",
+        "campaign_authority_true": "campaign output claims accepted/review/promotion authority",
+        "campaign_provider_dump": "campaign output contains private, secret, reasoning, or provider-payload marker",
+        "campaign_missing_context_flag": "campaign output is not marked review_context_only",
     }
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
@@ -1039,6 +1276,7 @@ def run_self_test() -> int:
         write_operator_handoff_fixture(root, "handoff.good", good_operator_handoff())
         write_research_loop_fixture(root, "loop.good", good_research_loop_export())
         write_crosscheck_fixture(root, "crosscheck.good", good_crosscheck_export())
+        write_campaign_fixture(root, "campaign.good", good_campaign_export())
         positive_errors = check_repository(root)
         if positive_errors:
             print("positive fixture failed:", file=sys.stderr)
@@ -1063,6 +1301,15 @@ def run_self_test() -> int:
                 "crosscheck_as_gate_pass",
             }:
                 write_crosscheck_fixture(case_root, case, bad_crosscheck_export(case))
+            elif case.startswith("campaign_") and case not in {
+                "campaign_as_source",
+                "campaign_as_accepted_proof",
+                "campaign_as_accepted_refutation",
+                "campaign_as_human_review",
+                "campaign_as_verifier_pass",
+                "campaign_as_gate_pass",
+            }:
+                write_campaign_fixture(case_root, case, bad_campaign_export(case))
             else:
                 write_fixture(case_root, case, bad_artifact(case))
             errors = check_repository(case_root)
