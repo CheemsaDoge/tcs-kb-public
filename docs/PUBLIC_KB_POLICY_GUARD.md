@@ -23,7 +23,14 @@ The guard checks public KB YAML records for:
   eval reports structurally claimed as accepted artifact source metadata,
   accepted proof/theorem/refutation/status, human review, verifier pass, gate
   pass, or promotion authority;
+- campaign handoffs, campaign eval reports, scorecards, attempts, or
+  `operator_task_v2` packets structurally claimed as accepted artifact source
+  metadata, accepted proof/theorem/refutation/status, human review, verifier
+  pass, gate pass, or promotion authority;
 - cross-check exports under `reviews/crosscheck/` that are not marked
+  `review_context_only` or that contain private paths, secrets, hidden
+  reasoning, raw provider payload markers, or authority fields set to true;
+- campaign exports under `reviews/campaign/` that are not marked
   `review_context_only` or that contain private paths, secrets, hidden
   reasoning, raw provider payload markers, or authority fields set to true;
 - operator handoff exports under `reviews/operator/` that contain private
@@ -57,7 +64,8 @@ source-reviewed, or semantically correct; reviewers must apply
 Operator policy is documented in `docs/OPERATOR_POLICY.md` and
 `docs/OPERATOR_HANDOFF_POLICY.md`. Cross-check report policy is documented in
 `docs/CROSSCHECK_REPORT_POLICY.md`. Research-loop policy is documented in
-`docs/RESEARCH_LOOP_POLICY.md`; the guard only checks common
+`docs/RESEARCH_LOOP_POLICY.md`. Campaign output policy is documented in
+`docs/CAMPAIGN_OUTPUT_POLICY.md`; the guard only checks common
 authority-spoofing and public-safety patterns and does not replace maintainer
 review.
 
